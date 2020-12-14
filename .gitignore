@@ -1,4 +1,10 @@
+# Credentials & files with sensitive information
+credentials.sh
+ic_api.key
+.token
+
 # Binaries for programs and plugins
+gics
 *.exe
 *.exe~
 *.dll
