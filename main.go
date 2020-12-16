@@ -52,23 +52,48 @@ func printVersions() {
 
 	fmt.Printf("> Build %s %s (SHA: %s)\n", v.Buildno, v.Builddate, v.Commitsha)
 	fmt.Printf("> API Version: %s\n", v.APIVersion)
-	fmt.Println("> Supported versions:")
+	fmt.Println("> Supported Template versions:")
 	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', tabwriter.TabIndent)
-	fmt.Fprintln(tw, "Template Name\tTerraform\tIBM Cloud Provider\tHelm\tHelm Provider\tAnsible\tAnsible Provisioner\tKubernetes Provider\tOC Client\tRest API Provider")
-	for i := range v.TemplateNames {
-		fmt.Fprintf(tw, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
-			v.TemplateNames[i],
-			v.TerraformVersions[i],
-			v.IBMCloudProviderVersions[i],
-			v.HelmVersions[i],
-			v.HelmProviderVersions[i],
-			v.AnsibleVersions[i],
-			v.AnsibleProvisionerVersions[i],
-			v.KubernetesProviderVersions[i],
-			v.OCClientVersions[i],
-			v.RestAPIProviderVersions[i],
-		)
+	// Header
+	fmt.Fprint(tw, "Template Name")
+	for _, name := range v.TemplateNames {
+		fmt.Fprintf(tw, "\t%s", name)
 	}
+	fmt.Fprint(tw, "\n")
+	// Body
+	row := func(title string, r []string) {
+		fmt.Fprint(tw, title)
+		for _, ver := range r {
+			fmt.Fprintf(tw, "\t%s", ver)
+		}
+		fmt.Fprint(tw, "\n")
+	}
+	row("Terraform", v.TerraformVersions)
+	row("IBM Cloud Provider", v.IBMCloudProviderVersions)
+	row("Helm", v.HelmVersions)
+	row("Helm Provider", v.HelmProviderVersions)
+	row("Ansible", v.AnsibleVersions)
+	row("Ansible Provisioner", v.AnsibleProvisionerVersions)
+	row("Kubernetes Provider", v.KubernetesProviderVersions)
+	row("OC Client", v.OCClientVersions)
+	row("Rest API Provider", v.RestAPIProviderVersions)
+
+	// This code print the table in landscape: wider and shorter
+	// fmt.Fprintln(tw, "Template Name\tTerraform\tIBM Cloud Provider\tHelm\tHelm Provider\tAnsible\tAnsible Provisioner\tKubernetes Provider\tOC Client\tRest API Provider")
+	// for i := range v.TemplateNames {
+	// 	fmt.Fprintf(tw, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+	// 		v.TemplateNames[i],
+	// 		v.TerraformVersions[i],
+	// 		v.IBMCloudProviderVersions[i],
+	// 		v.HelmVersions[i],
+	// 		v.HelmProviderVersions[i],
+	// 		v.AnsibleVersions[i],
+	// 		v.AnsibleProvisionerVersions[i],
+	// 		v.KubernetesProviderVersions[i],
+	// 		v.OCClientVersions[i],
+	// 		v.RestAPIProviderVersions[i],
+	// 	)
+	// }
 	tw.Flush()
 }
 
@@ -88,7 +113,7 @@ func printWorkspaceList() {
 
 func main() {
 	printVersions()
-	printWorkspaceList()
+	// printWorkspaceList()
 
 	// w, err := runSchematicsWorkspace()
 	// if err != nil {
