@@ -16,7 +16,7 @@ const (
 	defaultAPIEndpoint = "https://schematics.cloud.ibm.com"
 	defaultAPIVersion  = "v1"
 	userAgent          = "GICS"
-	timeout            = 100 // Seconds, longest timeout. Set shorter timeouts with context
+	timeout            = 20 // Seconds, longest timeout. Set shorter timeouts with context
 )
 
 // Service is the Schematics service

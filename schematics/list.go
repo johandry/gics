@@ -8,6 +8,8 @@ import (
 	apiv1 "github.com/johandry/gics/schematics/api/v1"
 )
 
+const listTimeout = 50
+
 // WorkspaceSummary is a data structure for the Schematic workspace information
 // to return a list of workspaces
 type WorkspaceSummary struct {
@@ -40,7 +42,7 @@ func List() (*WorkspaceList, error) {
 // List return a list of existing Schematics workspaces in your IBM Cloud account
 func (s *Service) List(ctx context.Context) (*WorkspaceList, error) {
 	// List Timeout
-	ctx, cancelFunc := context.WithTimeout(ctx, 500*time.Second)
+	ctx, cancelFunc := context.WithTimeout(ctx, listTimeout*time.Second)
 	defer cancelFunc()
 
 	resp, err := s.clientWithResponses.ListWorkspacesWithResponse(ctx, &apiv1.ListWorkspacesParams{})
