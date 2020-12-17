@@ -13,30 +13,36 @@ const (
 	version = "0.0.1"
 )
 
-// func runSchematicsWorkspace() (*schematics.Workspace, error) {
-// 	w := schematics.New("GICS Demo", "")
+func runSchematicsWorkspace() *schematics.Workspace {
+	w := schematics.New("GICS Demo", "")
 
-// 	w.AddVar("prefix", "gics-demo", "", "", false)
-// 	w.Code = []byte(`
-//     variable "prefix" {}
-//     provider "ibm" {
-//       generation         = 2
-//       region             = "us-south"
-//     }
-//     resource "ibm_resource_group" "group" {
-//       name = "${var.prefix}-group"
-//     }
-//     output "name" {
-//       value = ibm_resource_group.group.name
-//     }
-//   `)
+	w.AddVar("prefix", "gics-demo", "", "", false)
+	w.Code = []byte(`
+    variable "prefix" {}
+    provider "ibm" {
+      generation         = 2
+      region             = "us-south"
+    }
+    resource "ibm_resource_group" "group" {
+      name = "${var.prefix}-group"
+    }
+    output "name" {
+      value = ibm_resource_group.group.name
+    }
+  `)
 
-// 	if err := w.Run(); err != nil {
-// 		return w, fmt.Errorf("Fail the execution of the Schematics Workspace. %s", err)
-// 	}
+	if err := w.Run(); err != nil {
+		printError(err)
+	}
 
-// 	return w, nil
-// }
+	// output, err := w.Output()
+	// if err != nil {
+	// 	printError(err)
+	// }
+	// fmt.Printf("Resource Group name: %s", output["name"])
+
+	return w
+}
 
 func printError(err error) {
 	fmt.Printf("[ERROR] %s", err)
@@ -113,22 +119,10 @@ func printWorkspaceList() {
 
 func main() {
 	printVersions()
-	// printWorkspaceList()
+	printWorkspaceList()
 
-	// w, err := runSchematicsWorkspace()
-	// if err != nil {
-	// 	fmt.Printf("[ERROR] %s", err)
-	// 	return
-	// }
-
-	// output, err := w.Output()
-	// if err != nil {
-	// 	fmt.Printf("[ERROR] %s", err)
-	// 	return
-	// }
-	// fmt.Printf("Resource Group name: %s", output["name"])
-
-	// if err := w.Delete(true); err != nil {
-	// 	fmt.Println(err)
-	// }
+	w := runSchematicsWorkspace()
+	if err := w.Delete(true); err != nil {
+		printError(err)
+	}
 }
