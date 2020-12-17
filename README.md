@@ -1,5 +1,7 @@
 # Go IBM Cloud Schematics
 
+**This is still a Work in Progress**, all the code documented here is in development and testing.
+
 Go IBM Cloud Schematics (**GICS**) is a Go module and CLI to work with IBM Cloud Schematics. IBM Cloud Schematics delivers Terraform-as-a-Service using the open source Terraform provisioning engine. With IBM Cloud Schematics, you can organize your cloud resources across environments by using **workspaces**. Every workspace points to a set of Terraform configuration files and input parameters.
 
 - [Go IBM Cloud Schematics](#go-ibm-cloud-schematics)
