@@ -102,3 +102,10 @@ func (c *ICClient) Do(req *http.Request) (*http.Response, error) {
 
 	return c.http.Do(req)
 }
+
+func stringValue(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
