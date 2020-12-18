@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"text/tabwriter"
@@ -13,8 +14,8 @@ const (
 	version = "0.0.1"
 )
 
-func runSchematicsWorkspace() *schematics.Workspace {
-	w := schematics.New("GICS Demo", "")
+func runSchematicsWorkspaceWithCode() *schematics.Workspace {
+	w := schematics.New("GICS-Demo-with-Code", "", nil)
 
 	w.AddVar("prefix", "gics-demo", "", "", false)
 	w.Code = []byte(`
@@ -35,11 +36,31 @@ func runSchematicsWorkspace() *schematics.Workspace {
 		printError(err)
 	}
 
-	// output, err := w.Output()
-	// if err != nil {
-	// 	printError(err)
-	// }
-	// fmt.Printf("Resource Group name: %s", output["name"])
+	output := w.GetParam("name")
+	fmt.Printf("Resource Group name: %s", output["name"])
+
+	return w
+}
+
+func runSchematicsWorkspaceWithRepo() *schematics.Workspace {
+	// '{"name":"workspace","type": ["terraform_v0.13"],"template_repo": {"url": "https://github.com/IBM/cloud-enterprise-examples/tree/master/iac/01-getting-started"},"template_data": [{"folder": ".","type": "terraform_v0.13","variablestore": [{"name": "project_name","value": "gics"},{"name": "environment","value": "testing"},{"name": "public_key","value": "fakepublicsshkey", "secure": true}]}]}'
+
+	pubSSHKey, err := ioutil.ReadFile("~/.ssh/id_rsa.pub")
+	if err != nil {
+		printError(err)
+	}
+
+	w := schematics.New("GICS-Demo-with-Repo", "", nil)
+
+	w.AddVar("project_name", "gics", "", "", false)
+	w.AddVar("environment", "testing", "", "", false)
+	w.AddVar("public_key", string(pubSSHKey), "", "", false)
+
+	w.AddRepo("https://github.com/IBM/cloud-enterprise-examples/tree/master/iac/01-getting-started")
+
+	if err := w.Run(); err != nil {
+		printError(err)
+	}
 
 	return w
 }
@@ -121,7 +142,12 @@ func main() {
 	printVersions()
 	printWorkspaceList()
 
-	w := runSchematicsWorkspace()
+	w := runSchematicsWorkspaceWithCode()
+	if err := w.Delete(true); err != nil {
+		printError(err)
+	}
+
+	w = runSchematicsWorkspaceWithRepo()
 	if err := w.Delete(true); err != nil {
 		printError(err)
 	}

@@ -76,10 +76,8 @@ func run() (*schematics.Workspace, string, error) {
     return w, "", fmt.Errorf("[ERROR] Fail the execution of the Schematics Workspace. %s", err)
   }
 
-  output, err := w.Output()
-  if err != nil {
-    return w, "", fmt.Errorf("[ERROR] Fail getting the output parameters of the Schematics Workspace. %s", err)
-  }
+  output := w.GetParam("name")
+  fmt.Printf("Resource Group name: %s", output["name"])
 
   return w, output["name"], nil
 }
