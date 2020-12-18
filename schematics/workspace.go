@@ -9,18 +9,6 @@ const (
 	schematicsWorkspaceBaseURL = "https://cloud.ibm.com/schematics/workspaces"
 )
 
-// // Status is the status of a Schematics workspace
-// type Status int
-
-// const (
-// 	StatusNew Status = iota
-// 	StatusInactive
-// )
-
-// func (s Status) String() string {
-// 	return [...]string{"New", "Inactive"}[s]
-// }
-
 // Variable encapsulate the parameters for a Schematics Workspace or Terraform variable
 type Variable struct {
 	Name        string `json:"name,omitempty" yaml:"name,omitempty"`
@@ -45,9 +33,6 @@ type GitRepo struct {
 	Token        string `json:"token,omitempty" yaml:"token,omitempty"`
 }
 
-// WorkspaceStatus is the status of a Schematics workspace
-type WorkspaceStatus string
-
 // Workspace is a Schematics workspace
 type Workspace struct {
 	ID                  string                 `json:"id,omitempty" yaml:"id,omitempty"`
@@ -70,6 +55,7 @@ type Workspace struct {
 	Output              map[string]interface{} `json:"output,omitempty" yaml:"output,omitempty"`
 	Code                []byte
 	TarCode             []byte
+	service             *Service
 
 	// Other possible parameters used by the API:
 	// TemplateData         TemplateData                   `json:"template_data,omitempty" yaml:"template_data,omitempty"`
@@ -102,13 +88,18 @@ type Workspace struct {
 
 // New creates an empty Workspace structure which is linked to a Schematics
 // workspace and used to execute actions on it
-func New(name, description string) *Workspace {
+func New(name, description string, service *Service) *Workspace {
 	if len(name) == 0 {
 		name = fmt.Sprintf("workspace_%s", time.Now().Format("MM_DD_YYYY"))
+	}
+	if service == nil {
+		service = defaultService
 	}
 	return &Workspace{
 		Name:        name,
 		Description: description,
+		Status:      WorkspaceStatus("NEW"),
+		service:     service,
 	}
 }
 
@@ -143,19 +134,66 @@ func (w *Workspace) AddVar(name, value, varType, description string, secure bool
 	return nil
 }
 
+// AddRepo assign a Git URL from GitHub, GitLab, BitBucket or any other supported
+// by Schematics, to the Workspace
+func (w *Workspace) AddRepo(url string) {
+	if w.GitRepo != nil {
+		w.GitRepo.URL = url
+		return
+	}
+
+	w.GitRepo = &GitRepo{
+		URL: url,
+	}
+
+	return
+}
+
 // Run is used to create, generate and apply the plan of the Schematics
 // workspace in a synchronous way, blocking the execution of the code until the
 // process is completed or fail
 func (w *Workspace) Run() error {
+	// Create the Schematics workspace
+	actCreate, err := w.Create()
+	if err != nil {
+		return err
+	}
+	if err := actCreate.Wait(); err != nil {
+		return err
+	}
+
+	// Generate the workspace plan
+	actPlan, err := w.Plan()
+	if err != nil {
+		return err
+	}
+	if err := actPlan.Wait(); err != nil {
+		return err
+	}
+
+	// Apply the workspace plan
+	actApply, err := w.Apply()
+	if err != nil {
+		return err
+	}
+	if err := actApply.Wait(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-// Output collect the outputs of the execution of the Schematics
-// workspace plan to set the output parameter of the Workspace
-// func (w *Workspace) Output() (map[string]interface{}, error) {
-// 	w.output = map[string]interface{}{}
-// 	return w.output, nil
-// }
+// GetParam collect and returns the requested output parameters of the execution
+// of the Schematics workspace
+func (w *Workspace) GetParam(params ...string) map[string]interface{} {
+	output := map[string]interface{}{}
+	for _, key := range params {
+		if value, ok := w.Output[key]; ok {
+			output[key] = value
+		}
+	}
+	return output
+}
 
 // Delete ...
 func (w *Workspace) Delete(destroy bool) error {
