@@ -2,7 +2,6 @@ package schematics
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	apiv1 "github.com/johandry/gics/schematics/api/v1"
@@ -28,7 +27,6 @@ func (w *Workspace) Create() (*Activity, error) {
 			Name:        &v.Name,
 			Secure:      &v.Secure,
 			Type:        &v.Type,
-			UseDefault:  &v.UseDefault,
 			Value:       &v.Value,
 		}
 		variables = append(variables, variable)
@@ -73,7 +71,7 @@ func (w *Workspace) Create() (*Activity, error) {
 		return nil, err
 	}
 	if code := resp.StatusCode(); code != 201 {
-		return nil, fmt.Errorf(`{"status_code": %d, "status": %q}`, code, resp.Status())
+		return nil, getAPIError("fail to create the workspace", resp.Body)
 	}
 	response := resp.JSON201 // WorkspaceResponse
 
@@ -118,7 +116,7 @@ func (w *Workspace) Create() (*Activity, error) {
 		w.UninstallScriptName = stringValue(templateData[0].UninstallScriptName)
 		w.Values = stringValue(templateData[0].Values)
 
-		wv := []apiv1.WorkspaceVariableResponse(*templateData[0].Variablestore)
+		wv := []apiv1.WorkspaceVariableRequest(*templateData[0].Variablestore)
 		var variables []Variable
 		if len(wv) > 0 {
 			variables = []Variable{}
@@ -165,20 +163,36 @@ func (w *Workspace) Apply() (*Activity, error) {
 // Destroy destroyes the resources created by the Terraform code in the Schematics
 // Workspace, it does not delete the workspace
 func (w *Workspace) Destroy() (*Activity, error) {
-	// TODO: Complete the Destroy method of Workspace
-	return &Activity{}, nil
+	// If there isn't any resource, just delete the workspace
+	resources, err := w.ListResources()
+	if err != nil {
+		return nil, err
+	}
+	if len(resources) == 0 {
+		err := w.delete(false)
+		return &NilActivity, err
+	}
+
+	if err := w.delete(true); err != nil {
+		return nil, err
+	}
+
+	act, err := w.LastActivity(activityNameForDestroy)
+	if err != nil {
+		return nil, err
+	}
+
+	w.Status = WorkspaceStatusDestroyed
+	return act, err
 }
 
 // LastActivity returns the last executed activity. It should be call after every
 // action (i.e. Plan, Apply) to return the action activity.
 func (w *Workspace) LastActivity(name string) (*Activity, error) {
 	// Get all the activities of the workspace
-	activities, err := getActivities(w.service, w.ID)
-	if err != nil {
+	activities, err := w.LastActivities()
+	if err != nil || activities == nil {
 		return nil, err
-	}
-	if activities == nil || len(activities) == 0 {
-		return nil, nil
 	}
 
 	// Filter the activities by Name and PerformedBy
@@ -213,4 +227,17 @@ func (w *Workspace) LastActivity(name string) (*Activity, error) {
 	}
 
 	return &activity, nil
+}
+
+// LastActivities returns the last executed activities
+func (w *Workspace) LastActivities() ([]Activity, error) {
+	activities, err := getActivities(w.service, w.ID)
+	if err != nil {
+		return nil, err
+	}
+	if activities == nil || len(activities) == 0 {
+		return nil, nil
+	}
+
+	return activities, nil
 }

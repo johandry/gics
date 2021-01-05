@@ -1,12 +1,20 @@
 package schematics
 
 import (
+	"context"
 	"fmt"
 	"time"
+
+	apiv1 "github.com/johandry/gics/schematics/api/v1"
 )
 
 const (
 	schematicsWorkspaceBaseURL = "https://cloud.ibm.com/schematics/workspaces"
+	templateIDDefault          = "terraform_v0.13"
+)
+
+const (
+	deleteWorkspaceTimeout = 50
 )
 
 // Variable encapsulate the parameters for a Schematics Workspace or Terraform variable
@@ -16,7 +24,6 @@ type Variable struct {
 	Type        string `json:"type,omitempty" yaml:"type,omitempty"`
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	Secure      bool   `json:"secure,omitempty" yaml:"secure,omitempty"`
-	UseDefault  bool   `json:"use_default,omitempty" yaml:"use_default,omitempty"`
 }
 
 // EnvVariable is an environment variable to set in the Schematics Workspace
@@ -100,6 +107,7 @@ func New(name, description string, service *Service) *Workspace {
 		Description: description,
 		Status:      WorkspaceStatus("NEW"),
 		service:     service,
+		Type:        templateIDDefault,
 	}
 }
 
@@ -122,7 +130,6 @@ func (w *Workspace) AddVar(name, value, varType, description string, secure bool
 		Type:        varType,
 		Description: description,
 		Secure:      secure,
-		UseDefault:  false,
 	}
 
 	if len(w.Variables) == 0 {
@@ -195,23 +202,57 @@ func (w *Workspace) GetParam(params ...string) map[string]interface{} {
 	return output
 }
 
-// Delete ...
+// Delete deletes an existing Schematics workspace, it may destroy the resources
+// and wait for them to be destroyed
 func (w *Workspace) Delete(destroy bool) error {
-	// if _, err := w.DestroySync(nil); err != nil {
-	// 	fmt.Printf("Fail to destroy the resources provisioned by the Schematics Workspace. %s", err)
-	// 	fmt.Printf("Please, delete the resources provisioned by the Schematics Workspace manually. The Schematics Workspace URL is: %s", w.URL)
-	// 	return
-	// }
+	if !destroy {
+		// TODO: Should we return an error if there are resources created?
+		// 			 Maybe not, it may be possible to request to delete the workspace
+		// 			 and not the resources
+		return w.delete(false)
+	}
 
-	// fmt.Printf("The resources provisioned by the Schematics workspace %q (%s) has been destroyed", w.Name, w.ID)
+	actDestroy, err := w.Destroy()
+	if err != nil {
+		return err
+	}
 
-	// if err := w.Delete(); err != nil {
-	// 	fmt.Printf("Fail to delete the Schematics Workspace. %s", err)
-	// 	fmt.Printf("Please, delete the Schematics Workspace manually. The Schematics Workspace URL is: %s", w.URL)
-	// 	return
-	// }
+	return actDestroy.Wait()
+}
 
-	// fmt.Printf("Schematics workspace %q (%s) has been deleted", w.Name, w.ID)
+// delete deletes an existing Schematics workspace, it also destroy the resources
+// if the `destroy` parameter is set to true.
+func (w *Workspace) delete(destroy bool) error {
+	// Delete Timeout
+	ctx, cancelFunc := context.WithTimeout(context.Background(), deleteWorkspaceTimeout*time.Second)
+	defer cancelFunc()
+
+	token, err := w.getToken()
+	if err != nil {
+		return err
+	}
+
+	params := &apiv1.DeleteWorkspaceParams{
+		DestroyResources: &destroy,
+		RefreshToken:     &token,
+	}
+	resp, err := w.service.clientWithResponses.DeleteWorkspaceWithResponse(ctx, w.ID, params)
+	if err != nil {
+		return err
+	}
+	if code := resp.StatusCode(); code != 200 {
+		return getAPIError("failed to delete the workspace", resp.Body)
+	}
+
+	// response := resp.JSON200 // *WorkspaceDeleteResponse => *String
+	// fmt.Printf("[DEBUG] Delete response: %+v\n", *response)
+
+	w.Status = WorkspaceStatusDeleted
 
 	return nil
+}
+
+// ListResources returns the list of resources created by the workspace
+func (w *Workspace) ListResources() ([]string, error) {
+	return []string{}, nil
 }

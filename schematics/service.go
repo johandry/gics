@@ -1,6 +1,8 @@
 package schematics
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -24,6 +26,7 @@ type Service struct {
 	client              *apiv1.Client
 	clientWithResponses *apiv1.ClientWithResponses
 	apiVersion          string
+	authenticator       *core.IamAuthenticator
 }
 
 // ServiceOptions are the parameters to pass to create a new Schematics Service
@@ -61,10 +64,13 @@ func NewService(opt *ServiceOptions) *Service {
 		opt.APIVersion = defaultAPIVersion
 	}
 
+	authenticator := &core.IamAuthenticator{
+		ApiKey: opt.APIKey,
+	}
 	icc := &ICClient{
-		UserAgent: userAgent,
-		http:      opt.HTTPClient,
-		apiKey:    opt.APIKey,
+		UserAgent:     userAgent,
+		http:          opt.HTTPClient,
+		authenticator: authenticator,
 	}
 
 	c, _ := apiv1.NewClient(opt.BaseURL, apiv1.WithHTTPClient(icc))
@@ -74,15 +80,16 @@ func NewService(opt *ServiceOptions) *Service {
 		client:              c,
 		clientWithResponses: cwr,
 		apiVersion:          "/" + opt.APIVersion,
+		authenticator:       authenticator,
 	}
 }
 
 // ICClient is an HTTP Client wrapped by the Schematics client to communicate
 // with the IBM Cloud endpoint API and provide the provide the authentication
 type ICClient struct {
-	UserAgent string
-	http      *http.Client
-	apiKey    string
+	UserAgent     string
+	http          *http.Client
+	authenticator *core.IamAuthenticator
 }
 
 // Do implements the Do method so ICClient is a HttpRequestDoer interface
@@ -93,10 +100,7 @@ func (c *ICClient) Do(req *http.Request) (*http.Response, error) {
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
 
-	authenticator := &core.IamAuthenticator{
-		ApiKey: c.apiKey,
-	}
-	if err := authenticator.Authenticate(req); err != nil {
+	if err := c.authenticator.Authenticate(req); err != nil {
 		return nil, err
 	}
 
@@ -108,4 +112,39 @@ func stringValue(s *string) string {
 		return ""
 	}
 	return *s
+}
+
+// APIError encapsulate a returned error from the API
+type APIError struct {
+	Message string                  `json:"message,omitempty"`
+	Error   apiv1.APIMessagePayload `json:"error,omitempty"`
+}
+
+func getAPIError(msg string, body []byte) error {
+	var msgPayload apiv1.APIMessagePayload
+	if err := json.Unmarshal(body, &msgPayload); err != nil {
+		return err
+	}
+
+	apiErr := APIError{
+		Message: msg,
+		Error:   msgPayload,
+	}
+
+	jsonAPIError, err := json.Marshal(apiErr)
+	if err != nil {
+		return err
+	}
+
+	return fmt.Errorf("%s", jsonAPIError)
+}
+
+func (w *Workspace) getToken() (string, error) {
+	req, _ := http.NewRequest("GET", "", nil)
+	if err := w.service.authenticator.Authenticate(req); err != nil {
+		return "", err
+	}
+	token := req.Header.Get("Authorization")
+
+	return token, nil
 }

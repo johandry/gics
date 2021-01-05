@@ -18,6 +18,12 @@ const (
 
 	// WorkspaceStatusApplying is the status when the workspace is applying the changes
 	WorkspaceStatusApplying = WorkspaceStatus("APPLYING")
+
+	// WorkspaceStatusDestroyed is the status when the workspace resources were destroyed and the workspace deleted
+	WorkspaceStatusDestroyed = WorkspaceStatus("DESTROYED")
+
+	// WorkspaceStatusDeleted is the status when the workspace was deleted
+	WorkspaceStatusDeleted = WorkspaceStatus("DELETED")
 )
 
 // Status is the status of a Schematics workspace
