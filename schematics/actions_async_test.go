@@ -56,21 +56,21 @@ func TestWorkspace_Create(t *testing.T) {
 		Type:          "terraform_v0.13",
 		Values:        "",
 		Variables: []Variable{
-			Variable{
+			{
 				Name:        "project_name",
 				Value:       "gics",
 				Type:        "",
 				Description: "",
 				Secure:      false,
 			},
-			Variable{
+			{
 				Name:        "environment",
 				Value:       "testing",
 				Type:        "",
 				Description: "",
 				Secure:      false,
 			},
-			Variable{
+			{
 				Name:        "public_key",
 				Value:       "fakepublicsshkey",
 				Type:        "",

@@ -41,7 +41,7 @@ func TestList(t *testing.T) {
 	createdTime, _ := time.Parse(time.RFC3339Nano, "2020-11-01T18:30:15.364093434Z")
 	expected := &WorkspaceList{
 		Workspaces: []WorkspaceSummary{
-			WorkspaceSummary{
+			{
 				ID:          "myworkspace-270d8f90-b67a-46",
 				Name:        "myworkspace",
 				Description: "",
