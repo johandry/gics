@@ -43,26 +43,36 @@ type CatalogRef struct {
 	// Dry run
 	DryRun *bool `json:"dry_run,omitempty"`
 
-	// Catalog item icon url
+	// The URL to the icon of the software template in the IBM Cloud catalog.
 	ItemIconUrl *string `json:"item_icon_url,omitempty"`
 
-	// Catalog item id
+	// The ID of the software template that you chose to install from the IBM Cloud catalog. This software is provisioned with Schematics.
 	ItemId *string `json:"item_id,omitempty"`
 
-	// Catalog item name
+	// The name of the software that you chose to install from the IBM Cloud catalog.
 	ItemName *string `json:"item_name,omitempty"`
 
-	// Catalog item readme url
+	// The URL to the readme file of the software template in the IBM Cloud catalog.
 	ItemReadmeUrl *string `json:"item_readme_url,omitempty"`
 
-	// Catalog item url
+	// The URL to the software template in the IBM Cloud catalog.
 	ItemUrl *string `json:"item_url,omitempty"`
 
-	// Catalog item launch url
+	// The URL to the dashboard to access your software.
 	LaunchUrl *string `json:"launch_url,omitempty"`
 
-	// Catalog item offering version
+	// The version of the software template that you chose to install from the IBM Cloud catalog.
 	OfferingVersion *string `json:"offering_version,omitempty"`
+}
+
+// EnvValueUpdateRequest defines model for EnvValueUpdateRequest.
+type EnvValueUpdateRequest struct {
+
+	// Environment variable name
+	Name *string `json:"name,omitempty"`
+
+	// Value for environment variable
+	Value *string `json:"value,omitempty"`
 }
 
 // EnvVariableRequest defines model for EnvVariableRequest.
@@ -71,32 +81,32 @@ type EnvVariableRequest []map[string]interface{}
 // EnvVariableResponse defines model for EnvVariableResponse.
 type EnvVariableResponse struct {
 
-	// Env variable is hidden
+	// Environment variable is hidden
 	Hidden *bool `json:"hidden,omitempty"`
 
-	// Env variable name
+	// Environment variable name
 	Name *string `json:"name,omitempty"`
 
-	// Env variable is secure
+	// Environment variable is secure
 	Secure *bool `json:"secure,omitempty"`
 
-	// Value for env variable
+	// Value for environment variable
 	Value *string `json:"value,omitempty"`
 }
 
 // LogStoreResponse defines model for LogStoreResponse.
 type LogStoreResponse struct {
 
-	// Engine name
+	// The provisioning engine that was used for the action.
 	EngineName *string `json:"engine_name,omitempty"`
 
-	// Engine version
+	// The version of the provisioning engine that was used for the action.
 	EngineVersion *string `json:"engine_version,omitempty"`
 
-	// Engine id
+	// The ID that was assigned to your Terraform template of IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
-	// Log store url
+	// The URL to access the logs that were created during the plan, apply, or destroy action.
 	LogStoreUrl *string `json:"log_store_url,omitempty"`
 }
 
@@ -110,7 +120,13 @@ type LogStoreResponseList struct {
 // LogSummary defines model for LogSummary.
 type LogSummary struct {
 
-	// WorkspaceActivityStatus activity status type
+	// The status of your action. To retrieve the URL to your action logs, use the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
+	//
+	//
+	//  * **COMPLETED**: The action completed successfully.
+	// * **CREATED**: The action was created, but the provisioning, modification, or removal of IBM Cloud resources has not started yet.
+	// * **FAILED**: An error occurred during the plan, apply, or destroy action. Use the activity ID to retrieve the URL to the log files for your action.
+	// * **IN PROGRESS**: The action is in progress. You can use the `log_url` to access the logs.
 	ActivityStatus *WorkspaceActivityStatus `json:"activity_status,omitempty"`
 
 	// Template detected type
@@ -147,63 +163,63 @@ type OutputValues []OutputValuesInner
 // OutputValuesInner defines model for OutputValues_inner.
 type OutputValuesInner struct {
 
-	// Output variable name
+	// The subfolder in the GitHub or GitLab repository where your Terraform template is stored. If the template is stored in the root directory, `.` is returned.
 	Folder *string `json:"folder,omitempty"`
 
-	// Output variable id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
-	// List of Output values
+	// A list of Terraform output values.
 	OutputValues *[]map[string]interface{} `json:"output_values,omitempty"`
 
-	// Output variable type
+	// The Terraform version that was used to apply your template.
 	ValueType *string `json:"value_type,omitempty"`
 }
 
 // ResourceGroupResponse defines model for ResourceGroupResponse.
 type ResourceGroupResponse struct {
 
-	// Account id
+	// The ID of the account for which you listed the resource groups.
 	AccountId *string `json:"account_id,omitempty"`
 
-	// CRN
+	// The CRN of the resource group.
 	Crn *string `json:"crn,omitempty"`
 
-	// default
+	// If set to **true**, the resource group is used as the default resource group for your account. If set to **false**, the resource group is not used as the default resource group in your account.
 	Default *bool `json:"default,omitempty"`
 
-	// Resource group name
+	// The name of the resource group.
 	Name *string `json:"name,omitempty"`
 
-	// Resource group id
+	// The ID of the resource group.
 	ResourceGroupId *string `json:"resource_group_id,omitempty"`
 
-	// Resource group state
+	// The state of the resource group.
 	State *string `json:"state,omitempty"`
 }
 
 // SchematicsLocations defines model for SchematicsLocations.
 type SchematicsLocations struct {
 
-	// Country
+	// The country where the location is located.
 	Country *string `json:"country,omitempty"`
 
-	// Geography
+	// The geography that the location belongs to.
 	Geography *string `json:"geography,omitempty"`
 
-	// Location id
+	// The ID of the location.
 	Id *string `json:"id,omitempty"`
 
-	// Kind
+	// The kind of location.
 	Kind *string `json:"kind,omitempty"`
 
-	// Metro
+	// The metro area that the location belongs to.
 	Metro *string `json:"metro,omitempty"`
 
-	// Multizone metro
+	// The multizone metro area that the location belongs to.
 	MultizoneMetro *string `json:"multizone_metro,omitempty"`
 
-	// Location name
+	// The name of the location.
 	Name *string `json:"name,omitempty"`
 }
 
@@ -213,7 +229,7 @@ type SharedTargetData struct {
 	// Cluster created on
 	ClusterCreatedOn *string `json:"cluster_created_on,omitempty"`
 
-	// Cluster id
+	// The ID of the cluster where you want to provision the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	ClusterId *string `json:"cluster_id,omitempty"`
 
 	// Cluster name
@@ -222,16 +238,16 @@ type SharedTargetData struct {
 	// Cluster type
 	ClusterType *string `json:"cluster_type,omitempty"`
 
-	// Entitlement keys
+	// The entitlement key that you want to use to install IBM Cloud entitled software.
 	EntitlementKeys *[]map[string]interface{} `json:"entitlement_keys,omitempty"`
 
-	// Target namespace
+	// The Kubernetes namespace or OpenShift project where the resources of all IBM Cloud catalog templates that are included in the catalog offering are deployed into.
 	Namespace *string `json:"namespace,omitempty"`
 
-	// Target region
+	// The IBM Cloud region that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	Region *string `json:"region,omitempty"`
 
-	// Target resource group id
+	// The ID of the resource group that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	ResourceGroupId *string `json:"resource_group_id,omitempty"`
 
 	// Cluster worker count
@@ -244,45 +260,45 @@ type SharedTargetData struct {
 // SharedTargetDataResponse defines model for SharedTargetDataResponse.
 type SharedTargetDataResponse struct {
 
-	// Target cluster id
+	// The ID of the cluster where you want to provision the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	ClusterId *string `json:"cluster_id,omitempty"`
 
 	// Target cluster name
 	ClusterName *string `json:"cluster_name,omitempty"`
 
-	// Entitlement keys
+	// The entitlement key that you want to use to install IBM Cloud entitled software.
 	EntitlementKeys *[]map[string]interface{} `json:"entitlement_keys,omitempty"`
 
-	// Target namespace
+	// The Kubernetes namespace or OpenShift project where the resources of all IBM Cloud catalog templates that are included in the catalog offering are deployed into.
 	Namespace *string `json:"namespace,omitempty"`
 
-	// Target region
+	// The IBM Cloud region that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	Region *string `json:"region,omitempty"`
 
-	// Target resource group id
+	// The ID of the resource group that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering.
 	ResourceGroupId *string `json:"resource_group_id,omitempty"`
 }
 
 // StateStoreResponse defines model for StateStoreResponse.
 type StateStoreResponse struct {
 
-	// Engine name
+	// The provisioning engine that was used to apply the Terraform template or IBM Cloud catalog software template.
 	EngineName *string `json:"engine_name,omitempty"`
 
-	// Engine version
+	// The version of the provisioning engine that was used.
 	EngineVersion *string `json:"engine_version,omitempty"`
 
-	// State store id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
-	// State store url
+	// The URL where the Terraform statefile (`terraform.tfstate`) is stored. You can use the statefile to find an overview of IBM Cloud resources that were created by Schematics. Schematics uses the statefile as an inventory list to determine future create, update, or deletion actions.
 	StateStoreUrl *string `json:"state_store_url,omitempty"`
 }
 
 // StateStoreResponseList defines model for StateStoreResponseList.
 type StateStoreResponseList struct {
 
-	// List of state stores
+	// Information about workspace runtime data.
 	RuntimeData *[]StateStoreResponse `json:"runtime_data,omitempty"`
 }
 
@@ -304,33 +320,33 @@ type TemplateMetadata []map[string]interface{}
 // TemplateReadme defines model for TemplateReadme.
 type TemplateReadme struct {
 
-	// Readme string
+	// The `README.md` file for the template that your workspace points to.
 	Readme *string `json:"readme,omitempty"`
 }
 
 // TemplateRepoRequest defines model for TemplateRepoRequest.
 type TemplateRepoRequest struct {
 
-	// Repo branch
+	// The branch in GitHub where your Terraform template is stored.
 	Branch *string `json:"branch,omitempty"`
 
-	// Repo release
+	// The release tag in GitHub of your Terraform template.
 	Release *string `json:"release,omitempty"`
 
 	// Repo SHA value
 	RepoShaValue *string `json:"repo_sha_value,omitempty"`
 
-	// Repo URL
+	// The URL to the repository where the IBM Cloud catalog software template is stored.
 	RepoUrl *string `json:"repo_url,omitempty"`
 
-	// Source URL
+	// The URL to the GitHub or GitLab repository where your Terraform and public bit bucket template is stored. For more information of the environment variable syntax, see [Create workspace new](/docs/schematics?topic=schematics-schematics-cli-reference#schematics-workspace-new)
 	Url *string `json:"url,omitempty"`
 }
 
 // TemplateRepoResponse defines model for TemplateRepoResponse.
 type TemplateRepoResponse struct {
 
-	// Repo branch
+	// The branch in GitHub where your Terraform template is stored.
 	Branch *string `json:"branch,omitempty"`
 
 	// Full repo URL
@@ -339,16 +355,16 @@ type TemplateRepoResponse struct {
 	// Has uploaded git repo tar
 	HasUploadedgitrepotar *bool `json:"has_uploadedgitrepotar,omitempty"`
 
-	// Repo release
+	// The release tag in GitHub of your Terraform template.
 	Release *string `json:"release,omitempty"`
 
 	// Repo SHA value
 	RepoShaValue *string `json:"repo_sha_value,omitempty"`
 
-	// Repo URL
+	// The URL to the repository where the IBM Cloud catalog software template is stored.
 	RepoUrl *string `json:"repo_url,omitempty"`
 
-	// Source URL
+	// The URL to the GitHub or GitLab repository where your Terraform template is stored.
 	Url *string `json:"url,omitempty"`
 }
 
@@ -390,25 +406,25 @@ type TemplateResource []map[string]interface{}
 // TemplateResources defines model for TemplateResources.
 type TemplateResources struct {
 
-	// Template folder name
+	// The subfolder in GitHub or GitLab where your Terraform templates are stored. If your template is stored in the root directory, `.` is returned.
 	Folder *string `json:"folder,omitempty"`
 
-	// Template id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
 	// List of null resources
 	NullResources *[]map[string]interface{} `json:"null_resources,omitempty"`
 
-	// List of related resources
+	// Information about the IBM Cloud resources that are associated with your workspace.
 	RelatedResources *[]map[string]interface{} `json:"related_resources,omitempty"`
 
-	// List of resources
+	// Information about the IBM Cloud resources that are associated with your workspace.
 	Resources *[]map[string]interface{} `json:"resources,omitempty"`
 
 	// Number of resources
 	ResourcesCount *int64 `json:"resources_count,omitempty"`
 
-	// Type of templaes
+	// The Terraform version that was used to apply your template.
 	TemplateType *string `json:"template_type,omitempty"`
 }
 
@@ -418,19 +434,19 @@ type TemplateResourcesList []TemplateResources
 // TemplateRunTimeDataResponse defines model for TemplateRunTimeDataResponse.
 type TemplateRunTimeDataResponse struct {
 
-	// Engine command
+	// The command that was used to apply the Terraform template or IBM Cloud catalog software template.
 	EngineCmd *string `json:"engine_cmd,omitempty"`
 
-	// Engine name
+	// The provisioning engine that was used to apply the Terraform template or IBM Cloud catalog software template.
 	EngineName *string `json:"engine_name,omitempty"`
 
-	// Engine version
+	// The version of the provisioning engine that was used.
 	EngineVersion *string `json:"engine_version,omitempty"`
 
-	// Template id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
-	// Log store url
+	// The URL to access the logs that were created during the creation, update, or deletion of your IBM Cloud resources.
 	LogStoreUrl *string `json:"log_store_url,omitempty"`
 
 	// List of Output values
@@ -439,29 +455,34 @@ type TemplateRunTimeDataResponse struct {
 	// List of resources
 	Resources *[]TemplateResource `json:"resources,omitempty"`
 
-	// State store URL
+	// The URL where the Terraform statefile (`terraform.tfstate`) is stored. You can use the statefile to find an overview of IBM Cloud resources that were created by Schematics. Schematics uses the statefile as an inventory list to determine future create, update, or deletion actions.
 	StateStoreUrl *string `json:"state_store_url,omitempty"`
 }
 
 // TemplateSourceDataRequest defines model for TemplateSourceDataRequest.
 type TemplateSourceDataRequest struct {
 
-	// EnvVariableRequest ..
+	// A list of environment variables that you want to apply during the
+	// execution of a bash script. Environment variables must be provided as
+	// key value pairs. You can define environment variables  for IBM Cloud
+	//  catalog offerings that are provisioned by using a bash script.
 	EnvValues *EnvVariableRequest `json:"env_values,omitempty"`
 
-	// Folder name
+	// The subfolder in your GitHub or GitLab repository where your Terraform template is stored.
 	Folder *string `json:"folder,omitempty"`
 
-	// Init state file
+	// The content of an existing Terraform statefile that you want to import in to your workspace. To get the content of a Terraform statefile for a specific Terraform template in an existing workspace, run `ibmcloud terraform state pull --id <workspace_id> --template <template_id>`.
 	InitStateFile *string `json:"init_state_file,omitempty"`
 
-	// Template type
+	// The Terraform version that you want to use to run your Terraform code. Enter `terraform_v0.12` to use Terraform version 0.12, and `terraform_v0.11` to use Terraform version 0.11. If no value is specified, the Terraform config files are run with Terraform version 0.11. Make sure that your Terraform config files are compatible with the Terraform version that you select.
 	Type *string `json:"type,omitempty"`
 
 	// Uninstall script name
 	UninstallScriptName *string `json:"uninstall_script_name,omitempty"`
 
-	// Value
+	// A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `"autoscaling:
+	//   enabled: true
+	//   minReplicas: 2"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider.
 	Values *string `json:"values,omitempty"`
 
 	// List of values metadata
@@ -477,31 +498,33 @@ type TemplateSourceDataResponse struct {
 	// List of environment values
 	EnvValues *[]EnvVariableResponse `json:"env_values,omitempty"`
 
-	// Folder name
+	// The subfolder in your GitHub or GitLab repository where your Terraform template is stored. If your template is stored in the root directory, `.` is returned.
 	Folder *string `json:"folder,omitempty"`
 
 	// Has github token
 	HasGithubtoken *bool `json:"has_githubtoken,omitempty"`
 
-	// Template id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	Id *string `json:"id,omitempty"`
 
-	// Template tyoe
+	// The Terraform version that was used to run your Terraform code.
 	TemplateType *string `json:"template_type,omitempty"`
 
 	// Uninstall script name
 	UninstallScriptName *string `json:"uninstall_script_name,omitempty"`
 
-	// Values
+	// A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `""autoscaling:
+	//   enabled: true
+	//   minReplicas: 2"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider.
 	Values *string `json:"values,omitempty"`
 
-	// List of values metadata
+	// A list of input variables that are associated with the workspace.
 	ValuesMetadata *[]map[string]interface{} `json:"values_metadata,omitempty"`
 
-	// Values URL
+	// The API endpoint to access the input variables that you defined for your template.
 	ValuesUrl *string `json:"values_url,omitempty"`
 
-	// VariablesResponse -
+	// Information about the input variables that your template uses.
 	Variablestore *VariablesResponse `json:"variablestore,omitempty"`
 }
 
@@ -522,47 +545,65 @@ type TemplateValues struct {
 // UserValues defines model for UserValues.
 type UserValues struct {
 
-	// EnvVariableRequest ..
-	EnvValues *EnvVariableRequest `json:"env_values,omitempty"`
+	// EnvVariableResponse -
+	EnvValues *EnvVariableResponse `json:"env_values,omitempty"`
+
+	// A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `"autoscaling:
+	//   enabled: true
+	//   minReplicas: 2"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider.
+	Values *string `json:"values,omitempty"`
+
+	// Information about the input variables that your template uses.
+	Variablestore *VariablesResponse `json:"variablestore,omitempty"`
+}
+
+// UserValuesRequest defines model for UserValuesRequest.
+type UserValuesRequest struct {
+
+	// List of environment variables to update
+	EnvValues *[]EnvValueUpdateRequest `json:"env_values,omitempty"`
 
 	// User values
 	Values *string `json:"values,omitempty"`
 
-	// VariablesResponse -
-	Variablestore *VariablesResponse `json:"variablestore,omitempty"`
+	// VariablesUpdateRequest - for updating tf variables in put /values api
+	Variablestore *VariablesUpdateRequest `json:"variablestore,omitempty"`
 }
 
 // VariablesRequest defines model for VariablesRequest.
 type VariablesRequest []WorkspaceVariableRequest
 
 // VariablesResponse defines model for VariablesResponse.
-type VariablesResponse []WorkspaceVariableResponse
+type VariablesResponse []WorkspaceVariableRequest
+
+// VariablesUpdateRequest defines model for VariablesUpdateRequest.
+type VariablesUpdateRequest []WorkspaceVariableUpdateRequest
 
 // VersionResponse defines model for VersionResponse.
 type VersionResponse struct {
 
-	// Build data
+	// The date when the API version was built.
 	Builddate *string `json:"builddate,omitempty"`
 
-	// Build number
+	// The build number that the API is based on.
 	Buildno *string `json:"buildno,omitempty"`
 
-	// Commit SHA
+	// The SHA value for the Git commit that represents the latest version of the API.
 	Commitsha *string `json:"commitsha,omitempty"`
 
-	// Version number of 'Helm provider for Terraform'
+	// The Terraform Helm provider version that is used when you install Helm charts with Schematics.
 	HelmProviderVersion *string `json:"helm_provider_version,omitempty"`
 
-	// Helm Version
+	// The Helm version that is used when you install Helm charts with Schematics.
 	HelmVersion *string `json:"helm_version,omitempty"`
 
 	// Supported template types
 	SupportedTemplateTypes *[]map[string]interface{} `json:"supported_template_types,omitempty"`
 
-	// Terraform provider versions
+	// The version of the IBM Cloud Terraform provider plug-in that is used when you apply Terraform templates with Schematics.
 	TerraformProviderVersion *string `json:"terraform_provider_version,omitempty"`
 
-	// Terraform versions
+	// The Terraform version that is used when you apply Terraform templates with Schematics.
 	TerraformVersion *string `json:"terraform_version,omitempty"`
 }
 
@@ -572,32 +613,43 @@ type WorkspaceActivities struct {
 	// List of workspace activities
 	Actions *[]WorkspaceActivity `json:"actions,omitempty"`
 
-	// Workspace id
+	// The ID of the workspace.
 	WorkspaceId *string `json:"workspace_id,omitempty"`
 
-	// Workspace name
+	// The name of the workspace.
 	WorkspaceName *string `json:"workspace_name,omitempty"`
 }
 
 // WorkspaceActivity defines model for WorkspaceActivity.
 type WorkspaceActivity struct {
 
-	// Activity id
+	// The ID of the action. You can use the ID to retrieve the URL to the logs for that action by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
 	ActionId *string `json:"action_id,omitempty"`
 
-	// StatusMessages -
+	// Information about the success or failure of your action, including a success or error code and the timestamp when the action succeeded or failed.
 	Message *StatusMessages `json:"message,omitempty"`
 
-	// WorkspaceActivityAction activity action type
+	// The type of action that ran against your workspace.
+	//
+	//
+	//  * **APPLY**: The apply action was created when you used the `PUT /v1/workspaces/{id}/apply` API to apply a Terraform template in IBM Cloud.
+	//  * **DESTROY**: The destroy action was created when you used the `DELETE /v1/workspaces/{id}/destroy` API to remove all resources that are associated with your workspace.
+	//  * **PLAN**: The plan action was created when you used the `POST /v1/workspaces/{id}/plan` API to create a Terraform execution plan.
 	Name *WorkspaceActivityAction `json:"name,omitempty"`
 
-	// Activity performed at
+	// The timestamp when the action was initiated.
 	PerformedAt *time.Time `json:"performed_at,omitempty"`
 
-	// Activity performed by
+	// The user ID who initiated the action.
 	PerformedBy *string `json:"performed_by,omitempty"`
 
-	// WorkspaceActivityStatus activity status type
+	// The status of your action. To retrieve the URL to your action logs, use the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
+	//
+	//
+	//  * **COMPLETED**: The action completed successfully.
+	// * **CREATED**: The action was created, but the provisioning, modification, or removal of IBM Cloud resources has not started yet.
+	// * **FAILED**: An error occurred during the plan, apply, or destroy action. Use the activity ID to retrieve the URL to the log files for your action.
+	// * **IN PROGRESS**: The action is in progress. You can use the `log_url` to access the logs.
 	Status *WorkspaceActivityStatus `json:"status,omitempty"`
 
 	// List of template activities
@@ -610,24 +662,29 @@ type WorkspaceActivityAction string
 // WorkspaceActivityApplyResult defines model for WorkspaceActivityApplyResult.
 type WorkspaceActivityApplyResult struct {
 
-	// Activity id
+	// The ID of the activity that was created when you initiated a request to apply a Terraform template. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
 	Activityid *string `json:"activityid,omitempty"`
 }
 
 // WorkspaceActivityDestroyResult defines model for WorkspaceActivityDestroyResult.
 type WorkspaceActivityDestroyResult struct {
 
-	// Activity id
+	// The ID of the activity that was created for your IBM Cloud resource removal action. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
 	Activityid *string `json:"activityid,omitempty"`
 }
 
 // WorkspaceActivityLogs defines model for WorkspaceActivityLogs.
 type WorkspaceActivityLogs struct {
 
-	// Activity id
+	// The ID of the action that ran against your workspace.
 	ActionId *string `json:"action_id,omitempty"`
 
-	// WorkspaceActivityAction activity action type
+	// The type of action that ran against your workspace.
+	//
+	//
+	//  * **APPLY**: The apply action was created when you used the `PUT /v1/workspaces/{id}/apply` API to apply a Terraform template in IBM Cloud.
+	//  * **DESTROY**: The destroy action was created when you used the `DELETE /v1/workspaces/{id}/destroy` API to remove all resources that are associated with your workspace.
+	//  * **PLAN**: The plan action was created when you used the `POST /v1/workspaces/{id}/plan` API to create a Terraform execution plan.
 	Name *WorkspaceActivityAction `json:"name,omitempty"`
 
 	// List of activity logs
@@ -637,14 +694,14 @@ type WorkspaceActivityLogs struct {
 // WorkspaceActivityOptions defines model for WorkspaceActivityOptions.
 type WorkspaceActivityOptions struct {
 
-	// Action Options Template ...
+	// The resources to target.
 	ActionOptions *WorkspaceActivityOptionsTemplate `json:"action_options,omitempty"`
 }
 
 // WorkspaceActivityOptionsTemplate defines model for WorkspaceActivityOptionsTemplate.
 type WorkspaceActivityOptionsTemplate struct {
 
-	// Action targets
+	// A list of Terraform resource addresses to target.
 	Target *[]string `json:"target,omitempty"`
 
 	// Action tfvars
@@ -654,14 +711,14 @@ type WorkspaceActivityOptionsTemplate struct {
 // WorkspaceActivityPlanResult defines model for WorkspaceActivityPlanResult.
 type WorkspaceActivityPlanResult struct {
 
-	// Activity id
+	// The ID of the activity that ran against the workspace. This activity can be a `PLAN`, `APPLY`, or `DESTROY` action. You use the activity ID to retrieve the log URL with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
 	Activityid *string `json:"activityid,omitempty"`
 }
 
 // WorkspaceActivityRefreshResult defines model for WorkspaceActivityRefreshResult.
 type WorkspaceActivityRefreshResult struct {
 
-	// Activity id
+	// The ID of the activity that was created for your workspace refresh action. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
 	Activityid *string `json:"activityid,omitempty"`
 }
 
@@ -671,28 +728,34 @@ type WorkspaceActivityStatus string
 // WorkspaceActivityTemplate defines model for WorkspaceActivityTemplate.
 type WorkspaceActivityTemplate struct {
 
-	// End time for the activity
+	// The timestamp when the action completed or failed.
 	EndTime *time.Time `json:"end_time,omitempty"`
 
 	// LogSummary ...
 	LogSummary *LogSummary `json:"log_summary,omitempty"`
 
-	// Log URL
+	// The URL to access the logs that were created during the plan, apply, or destroy action.
 	LogUrl *string `json:"log_url,omitempty"`
 
-	// Message
+	// Information about the success or failure of your action, including a success or error code and the timestamp when the action succeeded or failed.
 	Message *string `json:"message,omitempty"`
 
-	// Activity start time
+	// The timestamp when the action started.
 	StartTime *time.Time `json:"start_time,omitempty"`
 
-	// WorkspaceActivityStatus activity status type
+	// The status of your action. To retrieve the URL to your action logs, use the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.
+	//
+	//
+	//  * **COMPLETED**: The action completed successfully.
+	// * **CREATED**: The action was created, but the provisioning, modification, or removal of IBM Cloud resources has not started yet.
+	// * **FAILED**: An error occurred during the plan, apply, or destroy action. Use the activity ID to retrieve the URL to the log files for your action.
+	// * **IN PROGRESS**: The action is in progress. You can use the `log_url` to access the logs.
 	Status *WorkspaceActivityStatus `json:"status,omitempty"`
 
-	// Template id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	TemplateId *string `json:"template_id,omitempty"`
 
-	// Template type
+	// The type of template.
 	TemplateType *string `json:"template_type,omitempty"`
 }
 
@@ -702,13 +765,13 @@ type WorkspaceActivityTemplateLogString string
 // WorkspaceActivityTemplateLogs defines model for WorkspaceActivityTemplateLogs.
 type WorkspaceActivityTemplateLogs struct {
 
-	// Log URL
+	// The URL to access the logs that were created during the plan, apply, or destroy action.
 	LogUrl *string `json:"log_url,omitempty"`
 
-	// Template id
+	// The ID that was assigned to your Terraform template or IBM Cloud catalog software template.
 	TemplateId *string `json:"template_id,omitempty"`
 
-	// Template type
+	// The type of template.
 	TemplateType *string `json:"template_type,omitempty"`
 }
 
@@ -718,25 +781,25 @@ type WorkspaceCreateRequest struct {
 	// List of applied shared dataset id
 	AppliedShareddataIds *[]string `json:"applied_shareddata_ids,omitempty"`
 
-	// CatalogRef -
+	// Information about the software template that you chose from the IBM Cloud catalog. This information is returned for IBM Cloud catalog offerings only.
 	CatalogRef *CatalogRef `json:"catalog_ref,omitempty"`
 
-	// Workspace description
+	// The description of the workspace.
 	Description *string `json:"description,omitempty"`
 
-	// Workspace location
+	// The location where you want to create your Schematics workspace and run Schematics actions. The location that you enter must match the API endpoint that you use. For example, if you use the Frankfurt API endpoint, you must specify `eu-de` as your location. If you use an API endpoint for a geography and you do not specify a location, Schematics determines the location based on availability.
 	Location *string `json:"location,omitempty"`
 
-	// Workspace name
+	// The name of your workspace. The name can be up to 128 characters long and can include alphanumeric characters, spaces, dashes, and underscores. When you create a workspace for your own Terraform template, consider including the microservice component that you set up with your Terraform template and the IBM Cloud environment where you want to deploy your resources in your name.
 	Name *string `json:"name,omitempty"`
 
-	// Workspace resource group
+	// The ID of the resource group where you want to provision the workspace.
 	ResourceGroup *string `json:"resource_group,omitempty"`
 
-	// SharedTargetData -
+	// Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template.
 	SharedData *SharedTargetData `json:"shared_data,omitempty"`
 
-	// Workspace tags
+	// A list of tags that are associated with the workspace.
 	Tags *[]string `json:"tags,omitempty"`
 
 	// TemplateData -
@@ -745,10 +808,10 @@ type WorkspaceCreateRequest struct {
 	// Workspace template ref
 	TemplateRef *string `json:"template_ref,omitempty"`
 
-	// TemplateRepoRequest -
+	// Input parameter to specify the source repository where your Schematics template is stored.
 	TemplateRepo *TemplateRepoRequest `json:"template_repo,omitempty"`
 
-	// List of Workspace type
+	// The Terraform version that you want to use to run your Terraform code. Enter `terraform_v0.12` to use Terraform version 0.12, and `terraform_v0.11` to use Terraform version 0.11. If no value is specified, the Terraform config files are run with Terraform version 0.11. Make sure that your Terraform config files are compatible with the Terraform version that you select.
 	Type *[]string `json:"type,omitempty"`
 
 	// WorkspaceStatusRequest -
@@ -764,86 +827,104 @@ type WorkspaceResponse struct {
 	// List of applied shared dataset id
 	AppliedShareddataIds *[]string `json:"applied_shareddata_ids,omitempty"`
 
-	// CatalogRef -
+	// Information about the software template that you chose from the IBM Cloud catalog. This information is returned for IBM Cloud catalog offerings only.
 	CatalogRef *CatalogRef `json:"catalog_ref,omitempty"`
 
-	// Workspace created at
+	// The timestamp when the workspace was created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 
-	// Workspace created by
+	// The user ID that created the workspace.
 	CreatedBy *string `json:"created_by,omitempty"`
 
 	// Workspace CRN
 	Crn *string `json:"crn,omitempty"`
 
-	// Workspace description
+	// The description of the workspace.
 	Description *string `json:"description,omitempty"`
 
-	// Workspace id
+	// The unique identifier of the workspace.
 	Id *string `json:"id,omitempty"`
 
-	// Last health checked at
+	// The timestamp when the last health check was performed by Schematics.
 	LastHealthCheckAt *time.Time `json:"last_health_check_at,omitempty"`
 
-	// Workspace location
+	// The IBM Cloud location where your workspace was provisioned.
 	Location *string `json:"location,omitempty"`
 
-	// Workspace name
+	// The name of the workspace.
 	Name *string `json:"name,omitempty"`
 
-	// Workspace resource group
+	// The resource group the workspace was provisioned in.
 	ResourceGroup *string `json:"resource_group,omitempty"`
 
-	// Workspace runtime data
+	// Information about the provisioning engine, state file, and runtime logs.
 	RuntimeData *[]TemplateRunTimeDataResponse `json:"runtime_data,omitempty"`
 
-	// SharedTargetDataResponse -
+	// Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template.
 	SharedData *SharedTargetDataResponse `json:"shared_data,omitempty"`
 
-	// Workspace status type
+	// The status of the workspace.
+	//
+	//  **Active**: After you successfully ran your infrastructure code by applying your Terraform execution plan, the state of your workspace changes to `Active`.
+	//
+	//  **Connecting**: Schematics tries to connect to the template in your source repo. If successfully connected, the template is downloaded and metadata, such as input parameters, is extracted. After the template is downloaded, the state of the workspace changes to `Scanning`.
+	//
+	//  **Draft**: The workspace is created without a reference to a GitHub or GitLab repository.
+	//
+	//  **Failed**: If errors occur during the execution of your infrastructure code in IBM Cloud Schematics, your workspace status is set to `Failed`.
+	//
+	//  **Inactive**: The Terraform template was scanned successfully and the workspace creation is complete. You can now start running Schematics plan and apply actions to provision the IBM Cloud resources that you specified in your template. If you have an `Active` workspace and decide to remove all your resources, your workspace is set to `Inactive` after all your resources are removed.
+	//
+	//  **In progress**: When you instruct IBM Cloud Schematics to run your infrastructure code by applying your Terraform execution plan, the status of our workspace changes to `In progress`.
+	//
+	//  **Scanning**: The download of the Terraform template is complete and vulnerability scanning started. If the scan is successful, the workspace state changes to `Inactive`. If errors in your template are found, the state changes to `Template Error`.
+	//
+	//  **Stopped**: The Schematics plan, apply, or destroy action was cancelled manually.
+	//
+	//  **Template Error**: The Schematics template contains errors and cannot be processed.
 	Status *WorkspaceStatus `json:"status,omitempty"`
 
-	// Workspace tags
+	// A list of tags that are associated with the workspace.
 	Tags *[]string `json:"tags,omitempty"`
 
-	// Workspace template data
+	// Information about the Terraform or IBM Cloud software template that you want to use.
 	TemplateData *[]TemplateSourceDataResponse `json:"template_data,omitempty"`
 
 	// Workspace template ref
 	TemplateRef *string `json:"template_ref,omitempty"`
 
-	// TemplateRepoResponse -
+	// Information about the Terraform template that your workspace points to.
 	TemplateRepo *TemplateRepoResponse `json:"template_repo,omitempty"`
 
-	// List of Workspace type
+	// The Terraform version that was used to run your Terraform code.
 	Type *[]string `json:"type,omitempty"`
 
-	// Workspace updated at
+	// The timestamp when the workspace was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 
-	// Workspace updated by
+	// The user ID that updated the workspace.
 	UpdatedBy *string `json:"updated_by,omitempty"`
 
-	// WorkspaceStatusResponse -
+	// Response parameter that indicate if a workspace is frozen or locked.
 	WorkspaceStatus *WorkspaceStatusResponse `json:"workspace_status,omitempty"`
 
-	// WorkspaceStatusMessage -
+	// Information about the last action that ran against the workspace.
 	WorkspaceStatusMsg *WorkspaceStatusMessage `json:"workspace_status_msg,omitempty"`
 }
 
 // WorkspaceResponseList defines model for WorkspaceResponseList.
 type WorkspaceResponseList struct {
 
-	// Total number of workspaces
+	// The number of workspaces in the IBM Cloud account that you have access to and that matched your search criteria.
 	Count *int64 `json:"count,omitempty"`
 
-	// Limit for the list
+	// The `limit` value that you set in your API request and that represents the maximum number of workspaces that you wanted to list.
 	Limit int64 `json:"limit"`
 
-	// Offset for the list
+	// The `offset` value that you set in your API request. The offset value represents the position number of the workspace from which you wanted to start listing your workspaces.
 	Offset int64 `json:"offset"`
 
-	// List of Workspaces
+	// The list of workspaces that was included in your API response.
 	Workspaces *[]WorkspaceResponse `json:"workspaces,omitempty"`
 }
 
@@ -853,61 +934,61 @@ type WorkspaceStatus string
 // WorkspaceStatusMessage defines model for WorkspaceStatusMessage.
 type WorkspaceStatusMessage struct {
 
-	// Status code
+	// The success or error code that was returned for the last plan, apply, or destroy action that ran against your workspace.
 	StatusCode *string `json:"status_code,omitempty"`
 
-	// Status message
+	// The success or error message that was returned for the last plan, apply, or destroy action that ran against your workspace.
 	StatusMsg *string `json:"status_msg,omitempty"`
 }
 
 // WorkspaceStatusRequest defines model for WorkspaceStatusRequest.
 type WorkspaceStatusRequest struct {
 
-	// Frozen status
+	// If set to true, the workspace is frozen and changes to the workspace are disabled.
 	Frozen *bool `json:"frozen,omitempty"`
 
-	// Frozen at
+	// The timestamp when the workspace was frozen.
 	FrozenAt *time.Time `json:"frozen_at,omitempty"`
 
-	// Frozen by
+	// The user ID that froze the workspace.
 	FrozenBy *string `json:"frozen_by,omitempty"`
 
-	// Locked status
+	// If set to true, the workspace is locked and disabled for changes.
 	Locked *bool `json:"locked,omitempty"`
 
-	// Locked by
+	// The user ID that initiated a resource-related action, such as applying or destroying resources, that locked the workspace.
 	LockedBy *string `json:"locked_by,omitempty"`
 
-	// Locked at
+	// The timestamp when the workspace was locked.
 	LockedTime *time.Time `json:"locked_time,omitempty"`
 }
 
 // WorkspaceStatusResponse defines model for WorkspaceStatusResponse.
 type WorkspaceStatusResponse struct {
 
-	// Frozen status
+	// If set to true, the workspace is frozen and changes to the workspace are disabled.
 	Frozen *bool `json:"frozen,omitempty"`
 
-	// Frozen at
+	// The timestamp when the workspace was frozen.
 	FrozenAt *time.Time `json:"frozen_at,omitempty"`
 
-	// Frozen by
+	// The user ID that froze the workspace.
 	FrozenBy *string `json:"frozen_by,omitempty"`
 
-	// Locked status
+	// If set to true, the workspace is locked and disabled for changes.
 	Locked *bool `json:"locked,omitempty"`
 
-	// Locked by
+	// The user ID that initiated a resource-related action, such as applying or destroying resources, that locked the workspace.
 	LockedBy *string `json:"locked_by,omitempty"`
 
-	// Locked at
+	// The timestamp when the workspace was locked.
 	LockedTime *time.Time `json:"locked_time,omitempty"`
 }
 
 // WorkspaceStatusUpdateRequest defines model for WorkspaceStatusUpdateRequest.
 type WorkspaceStatusUpdateRequest struct {
 
-	// Frozen status
+	// If set to true, the workspace is frozen and changes to the workspace are disabled.
 	Frozen *bool `json:"frozen,omitempty"`
 
 	// Frozen at
@@ -929,32 +1010,32 @@ type WorkspaceStatusUpdateRequest struct {
 // WorkspaceTemplateValuesResponse defines model for WorkspaceTemplateValuesResponse.
 type WorkspaceTemplateValuesResponse struct {
 
-	// List of runtime data
+	// Information about the provisioning engine, state file, and runtime logs.
 	RuntimeData *[]TemplateRunTimeDataResponse `json:"runtime_data,omitempty"`
 
-	// SharedTargetData -
+	// Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template.
 	SharedData *SharedTargetData `json:"shared_data,omitempty"`
 
-	// List of source data
+	// Information about the input variables that are used in the template.
 	TemplateData *[]TemplateSourceDataResponse `json:"template_data,omitempty"`
 }
 
 // WorkspaceUpdateRequest defines model for WorkspaceUpdateRequest.
 type WorkspaceUpdateRequest struct {
 
-	// CatalogRef -
+	// Information about the software template that you chose from the IBM Cloud catalog. This information is returned for IBM Cloud catalog offerings only.
 	CatalogRef *CatalogRef `json:"catalog_ref,omitempty"`
 
-	// Workspace description
+	// The description of the workspace.
 	Description *string `json:"description,omitempty"`
 
-	// Workspace name
+	// The name of the workspace.
 	Name *string `json:"name,omitempty"`
 
-	// SharedTargetData -
+	// Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template.
 	SharedData *SharedTargetData `json:"shared_data,omitempty"`
 
-	// Tags -
+	// A list of tags that you want to associate with your workspace.
 	Tags *Tags `json:"tags,omitempty"`
 
 	// TemplateData -
@@ -966,51 +1047,51 @@ type WorkspaceUpdateRequest struct {
 	// List of Workspace type
 	Type *[]string `json:"type,omitempty"`
 
-	// WorkspaceStatusUpdateRequest -
+	// Information about the updated workspace status.
 	WorkspaceStatus *WorkspaceStatusUpdateRequest `json:"workspace_status,omitempty"`
 
-	// WorkspaceStatusMessage -
+	// Information about the last action that ran against the workspace.
 	WorkspaceStatusMsg *WorkspaceStatusMessage `json:"workspace_status_msg,omitempty"`
 }
 
 // WorkspaceVariableRequest defines model for WorkspaceVariableRequest.
 type WorkspaceVariableRequest struct {
 
-	// Variable description
+	// The description of your input variable.
 	Description *string `json:"description,omitempty"`
 
-	// Variable name
+	// The name of the variable.
 	Name *string `json:"name,omitempty"`
 
-	// Variable is secure
+	// If set to `true`, the value of your input variable is protected and not returned in your API response.
 	Secure *bool `json:"secure,omitempty"`
 
-	// Variable type
+	// `Terraform v0.11` supports `string`, `list`, `map` data type. For more information, about the syntax, see [Configuring input variables](https://www.terraform.io/docs/configuration-0-11/variables.html). <br> `Terraform v0.12` additionally, supports `bool`, `number` and complex data types such as `list(type)`, `map(type)`, `object({attribute name=type,..})`, `set(type)`, `tuple([type])`. For more information, about the syntax to use the complex data type, see [Configuring variables](https://www.terraform.io/docs/configuration/variables.html#type-constraints).
 	Type *string `json:"type,omitempty"`
 
-	// Variable uses default value; and is not over-ridden.
-	UseDefault *bool `json:"use_default,omitempty"`
-
-	// Value of the Variable
+	// Enter the value as a string for the primitive types such as `bool`, `number`, `string`, and `HCL` format for the complex variables, as you provide in a `.tfvars` file. **You need to enter escaped string of `HCL` format for the complex variable value**. For more information, about how to declare variables in a terraform configuration file and provide value to schematics, see [Providing values for the declared variables](/docs/schematics?topic=schematics-create-tf-config#declare-variable).
 	Value *string `json:"value,omitempty"`
 }
 
-// WorkspaceVariableResponse defines model for WorkspaceVariableResponse.
-type WorkspaceVariableResponse struct {
+// WorkspaceVariableUpdateRequest defines model for WorkspaceVariableUpdateRequest.
+type WorkspaceVariableUpdateRequest struct {
 
-	// Variable descrption
+	// The description of your input variable.
 	Description *string `json:"description,omitempty"`
 
-	// Variable name
+	// The name of the variable.
 	Name *string `json:"name,omitempty"`
 
-	// Variable is secure
+	// If set to `true`, the value of your input variable is protected and not returned in your API response.
 	Secure *bool `json:"secure,omitempty"`
 
-	// Variable type
+	// `Terraform v0.11` supports `string`, `list`, `map` data type. For more information, about the syntax, see [Configuring input variables](https://www.terraform.io/docs/configuration-0-11/variables.html). <br> `Terraform v0.12` additionally, supports `bool`, `number` and complex data types such as `list(type)`, `map(type)`, `object({attribute name=type,..})`, `set(type)`, `tuple([type])`. For more information, about the syntax to use the complex data type, see [Configuring variables](https://www.terraform.io/docs/configuration/variables.html#type-constraints).
 	Type *string `json:"type,omitempty"`
 
-	// Value of the Variable
+	// If set to true, you are removing the overridden variable value from the .tfvars file. The next time plan or apply is executed, the default value for the variable in the Terraform template is used.
+	UseDefault *bool `json:"use_default,omitempty"`
+
+	// Enter the value as a string for the primitive types such as `bool`, `number`, `string`, and `HCL` format for the complex variables, as you provide in a `.tfvars` file. **You need to enter escaped string of `HCL` format for the complex variable value**. For more information, about how to declare variables in a terraform configuration file and provide value to schematics, see [Providing values for the declared variables](/docs/schematics?topic=schematics-create-tf-config#declare-variable).
 	Value *string `json:"value,omitempty"`
 }
 
@@ -1313,7 +1394,7 @@ type GetWorkspaceInputsParams struct {
 }
 
 // ReplaceWorkspaceInputsJSONBody defines parameters for ReplaceWorkspaceInputs.
-type ReplaceWorkspaceInputsJSONBody UserValues
+type ReplaceWorkspaceInputsJSONBody UserValuesRequest
 
 // ReplaceWorkspaceInputsParams defines parameters for ReplaceWorkspaceInputs.
 type ReplaceWorkspaceInputsParams struct {

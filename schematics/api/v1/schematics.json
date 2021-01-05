@@ -15,6 +15,22 @@
         ],
         "summary": "Get Schematics API information",
         "description": "Retrieve detailed information about the IBM Cloud Schematics API version and the version of the provider plug-ins that the API uses.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.list"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.list"
+            }
+          ]
+        },
         "operationId": "get_schematics_version",
         "responses": {
           "200": {
@@ -105,6 +121,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
+                  "description": "A list of IBM Cloud locations where you can create Schematics workspaces. ",
                   "items": {
                     "$ref": "#/components/schemas/SchematicsLocations"
                   }
@@ -211,6 +228,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
+                  "description": "A list of resource groups that your account has access to. ",
                   "items": {
                     "$ref": "#/components/schemas/ResourceGroupResponse"
                   }
@@ -297,6 +315,22 @@
         ],
         "summary": "List workspaces",
         "description": "Retrieve a list of Schematics workspaces from your IBM Cloud account that you have access to. The list of workspaces that is returned depends on the API endpoint that you use. For example, if you use an API endpoint for a geography, such as North America, only workspaces that are created in `us-south` or `us-east` are returned. \n\n For more information about supported API endpoints, see [API endpoints](/apidocs/schematics#api-endpoints). ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.list"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.list"
+            }
+          ]
+        },
         "operationId": "list_workspaces",
         "parameters": [
           {
@@ -519,6 +553,22 @@
         ],
         "summary": "Create a workspace",
         "description": "Create an IBM Cloud Schematics workspace that points to the source repository where your Terraform template or the IBM Cloud software template is stored. You can decide to create your workspace without connecting it to a GitHub or GitLab repository. Your workspace is then created with a **Draft** state. To later connect your workspace to a GitHub or GitLab repository, you must use the `PUT /v1/workspaces/{id}` API to update the workspace or use the `/v1/workspaces/{id}/templates/{template_id}/template_repo_upload` API to upload a TAR file instead. \n\n **Getting API endpoint**: \n\n * The Schematics API endpoint that you use to create the workspace determines where your Schematics actions run and your data is stored. See [API endpoints](/apidocs/schematics#api-endpoints) for more information. \n * If you use the API endpoint for a geography and not a specific location, such as North America, you can specify the location in your API request body. \n * If you do not specify the location in the request body, Schematics determines your workspace location based on availability. \n * If you use an API endpoint for a specific location, such as Frankfurt, the location that you enter in your API request body must match your API endpoint. \n * You also have the option to not specify a location in your API request body if you use a location-specific API endpoint. \n\n **Getting IAM access token**: \n * Before you create Schematics workspace, you need to create the IAM access token for your IBM Cloud Account. \n * To create IAM access token, use `export IBMCLOUD_API_KEY=<ibmcloud_api_key>` and execute `curl -X POST \"https://iam.cloud.ibm.com/identity/token\" -H \"Content-Type: application/x-www-form-urlencoded\" -d \"grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=$IBMCLOUD_API_KEY\" -u bx:bx`. For more information, about creating IAM access token and API Docs, see [IAM access token](https://cloud.ibm.com/apidocs/iam-identity-token-api#gettoken-password) and [Create API key](https://cloud.ibm.com/apidocs/iam-identity-token-api#create-api-key). \n * You can set the environment values  `export ACCESS_TOKEN=<access_token>` and `export REFRESH_TOKEN=<refresh_token>`. \n * You can use the obtained IAM access token in create workspace `curl` command.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.create"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.create"
+            }
+          ]
+        },
         "operationId": "create_workspace",
         "parameters": [
           {
@@ -892,6 +942,22 @@
         ],
         "summary": "Get workspace details",
         "description": " Retrieve detailed information for a workspace in your IBM Cloud account. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.read"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.read"
+            }
+          ]
+        },
         "operationId": "get_workspace",
         "parameters": [
           {
@@ -1129,6 +1195,22 @@
         ],
         "summary": "Update workspace metadata",
         "description": "Use this API to update the following workspace metadata: \n\n * Workspace name (`name`) - **Note**: Updating the workspace name does not update the ID of the workspace. \n * Workspace description (`description`) \n * Tags (`tags[]`) \n * Resource group (`resource_group`) \n * Workspace status (`workspace_status.frozen`) \n\n\n **Tip**: If you want to update information about the Terraform template or IBM Cloud catalog software template that your workspace points to, use the `PUT /v1/workspaces/{id}` API. To update workspace variables, use the `PUT /v1/workspaces/{id}/template_data/{template_id}/values` API.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
         "operationId": "update_workspace",
         "parameters": [
           {
@@ -1440,6 +1522,22 @@
         ],
         "summary": "Update workspace",
         "description": "Use this API to update or replace the entire workspace, including the Terraform template (`template_repo`) or IBM Cloud catalog software template (`catalog_ref`) that your workspace points to.  \n\n\n **Tip**: If you want to update workspace metadata, use the `PATCH /v1/workspaces/{id}` API. To update workspace variables, use the `PUT /v1/workspaces/{id}/template_data/{template_id}/values` API.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
         "operationId": "replace_workspace",
         "parameters": [
           {
@@ -1760,6 +1858,22 @@
         ],
         "summary": "Delete a workspace",
         "description": "Deletes a workspace from IBM Cloud Schematics. Deleting a workspace does not automatically remove the IBM Cloud resources that the workspace manages. To remove all resources that are associated with the workspace, use the `DELETE /v1/workspaces/{id}?destroyResources=true` API. \n\n **Note**: If you delete a workspace without deleting the resources, you must manage your resources with the resource dashboard or CLI afterwards. You cannot use IBM Cloud Schematics anymore to manage your resources. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.delete"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.delete"
+            }
+          ]
+        },
         "operationId": "delete_workspace",
         "parameters": [
           {
@@ -1974,6 +2088,22 @@
         ],
         "summary": "Upload a TAR file to your workspace",
         "description": "Provide your Terraform template by uploading a TAR file from your local machine. Before you use this API, you must create a workspace without a link to a GitHub or GitLab repository with the `POST /v1/workspaces` API.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.update"
+            }
+          ]
+        },
         "parameters": [
           {
             "description": "The ID of the workspace where you want to upload your `.tar` file. To find the workspace ID, use the `GET /v1/workspaces` API.",
@@ -2010,7 +2140,7 @@
                 "type": "object",
                 "properties": {
                   "file": {
-                    "description": "The TAR file that holds your Terraform template.",
+                    "description": "You can upload the `TAR` file of your template repository, to the workspace by using `tar` command to create the file. For example, `tar -cvf mytarfile.tar $TEMPLATE_REPO_FOLDER`.",
                     "type": "string",
                     "format": "binary"
                   }
@@ -2195,6 +2325,22 @@
         ],
         "summary": "Perform a Schematics plan action",
         "description": "Run a Schematics plan action against your workspace. The plan action creates a summary of IBM Cloud resources that must be created, modified, or deleted to achieve the state that is described in the Terraform or IBM Cloud catalog template that your workspace points to. During this time, you cannot make changes to your workspace. You can use the summary to verify your changes before you apply the template in IBM Cloud. \n\n\n **Important**: Your workspace must be in an `Inactive`, `Active`, `Failed`, or `Stopped` state to perform a Schematics plan action. \n\n\n **Note**: This API returns an activity ID that you use to retrieve the URL to the log file with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace-resources.plan"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace-resources.plan"
+            }
+          ]
+        },
         "operationId": "plan_workspace_command",
         "parameters": [
           {
@@ -2448,6 +2594,22 @@
         ],
         "summary": "Perform a Schematics apply action",
         "description": "Run a Schematics apply action against your workspace. An apply action provisions, modifies, or removes the IBM Cloud resources that you described in the Terraform template that your workspace points to. Depending on the type and number of resources that you want to provision or modify, this process might take a few minutes, or even up to hours to complete. During this time, you cannot make changes to your workspace. After all updates are applied, the state of your IBM Cloud resources is stored in a Terraform state file that IBM Cloud Schematics uses to determine what resources exist in your IBM Cloud account. \n\n\n **Important**: Your workspace must be in an `Inactive`, `Active`, `Failed`, or `Stopped` state to perform a Schematics apply action. \n\n\n **Note**: This API returns an activity ID that you use to retrieve the log URL with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. \n\n\n **Important:** Applying a template might incur costs. Make sure to review the pricing information for the resources that you specified in your templates before you apply the template in IBM Cloud. To find a summary of actions that Schematics is about to perform, create a Terraform execution plan with the `POST /v1/workspaces/{id}/plan` API.  ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace-resources.create"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace-resources.create"
+            }
+          ]
+        },
         "operationId": "apply_workspace_command",
         "parameters": [
           {
@@ -2713,6 +2875,22 @@
         ],
         "summary": "Perform a Schematics destroy action",
         "description": "Run a Schematics destroy action against your workspace. A destroy action removes all IBM Cloud resources that are associated with your workspace. Removing your resources does not delete the Schematics workspace. To delete the workspace, use the `DELETE /v1/workspaces/{id}` API. This API returns an activity ID that you use to retrieve the URL to the log file with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. \n\n\n **Important**: Your workspace must be in an `Active`, `Failed`, or `Stopped` state to perform a Schematics destroy action. \n\n\n **Note**: Deleting IBM Cloud resources cannot be undone. Make sure that you back up any required data before you remove your resources. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace-resources.delete"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace-resources.delete"
+            }
+          ]
+        },
         "operationId": "destroy_workspace_command",
         "parameters": [
           {
@@ -2977,6 +3155,22 @@
         ],
         "summary": "Perform a Schematics refresh action",
         "description": "Run a Schematics refresh action against your workspace. A refresh action validates the IBM Cloud resources in your account against the state that is stored in the Terraform statefile of your workspace. If differences are found, the Terraform statefile is updated accordingly. This API returns an activity ID that you use to retrieve the URL to the log file with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.refresh"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.refresh"
+            }
+          ]
+        },
         "operationId": "refresh_workspace_command",
         "parameters": [
           {
@@ -3595,6 +3789,22 @@
         "tags": [
           "workspaces"
         ],
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.activity.action_logs"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.activity.action_logs"
+            }
+          ]
+        },
         "parameters": [
           {
             "description": "The ID of the workspace where you want to stop the Schematics apply action. To find the workspace ID, use the `GET /workspaces` API.",
@@ -3798,6 +4008,22 @@
         ],
         "summary": "Get workspace action log URL",
         "description": "Get the Terraform log file URL for a workspace action. You can retrieve the log URL for actions that were created with the `PUT /v1/workspaces/{id}/apply`, `POST /v1/workspaces/{id}/plan`, or `DELETE /v1/workspaces/{id}/destroy` API. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.log_stores"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.log_stores"
+            }
+          ]
+        },
         "operationId": "get_workspace_activity_logs",
         "parameters": [
           {
@@ -4398,6 +4624,22 @@
         ],
         "summary": "Show logs for the latest action for a workspace template",
         "description": "Show the Terraform logs for the most recent action of a template that ran against your workspace.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.state_stores"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.state_stores"
+            }
+          ]
+        },
         "operationId": "get_template_logs",
         "parameters": [
           {
@@ -4605,6 +4847,22 @@
         ],
         "summary": "Get Terraform statefile URL",
         "description": "Retrieve the URL to the Terraform statefile (`terraform.tfstate`). You use the URL to access the Terraform statefile. The Terraform statefile includes detailed information about the IBM Cloud resources that you provisioned with IBM Cloud Schematics and Schematics uses the file to determine future create, modify, or delete actions for your resources. To show the content of the Terraform statefile, use the `GET /v1/workspaces/{id}/runtime_data/{template_id}/state_store` API.",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.template_state_stores"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.template_state_stores"
+            }
+          ]
+        },
         "operationId": "get_workspace_state",
         "parameters": [
           {
@@ -5424,6 +5682,22 @@
         ],
         "summary": "Get workspace template details",
         "description": "Retrieve detailed information about the Terraform template that your workspace points to. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.template_metadata_values"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.template_metadata_values"
+            }
+          ]
+        },
         "operationId": "get_all_workspace_inputs",
         "parameters": [
           {
@@ -5835,6 +6109,22 @@
         ],
         "summary": "List workspace input variables",
         "description": "Retrieve a list of input variables that are declared in your Terraform or IBM Cloud catalog template. ",
+        "x-ibm-permissions": {
+          "summary": "Authorization",
+          "actions": [
+            {
+              "name": "schematics.workspace.template_values"
+            }
+          ]
+        },
+        "x-ibm-events": {
+          "summary": "Auditing",
+          "events": [
+            {
+              "name": "schematics.workspace.template_values"
+            }
+          ]
+        },
         "operationId": "get_workspace_inputs",
         "parameters": [
           {
@@ -6059,11 +6349,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserValues"
+                "$ref": "#/components/schemas/UserValuesRequest"
               }
             }
           },
-          "description": "Input parameter to update workspace input variables.",
+          "description": "Input parameters to update workspace input variables.",
           "required": true
         },
         "x-codegen-request-body-name": "workspace",
@@ -6432,25 +6722,30 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "Response status message"
+            "description": "Response status message",
+            "x-go-name": "Message"
           },
           "messageid": {
             "type": "string",
-            "description": "Response status message id"
+            "description": "Response status message id",
+            "x-go-name": "MessageID"
           },
           "requestid": {
             "type": "string",
-            "description": "Response request id"
+            "description": "Response request id",
+            "x-go-name": "RequestID"
           },
           "statuscode": {
             "type": "integer",
             "description": "Response status code",
-            "format": "int64"
+            "format": "int64",
+            "x-go-name": "StatusCode"
           },
           "timestamp": {
             "type": "string",
             "description": "Response time-stamp",
-            "format": "date-time"
+            "format": "date-time",
+            "x-go-name": "TimeStamp"
           }
         },
         "description": "APIMessagePayload -"
@@ -6464,60 +6759,75 @@
           },
           "item_icon_url": {
             "type": "string",
-            "description": "Catalog item icon url"
+            "description": "The URL to the icon of the software template in the IBM Cloud catalog."
           },
           "item_id": {
             "type": "string",
-            "description": "Catalog item id"
+            "description": "The ID of the software template that you chose to install from the IBM Cloud catalog. This software is provisioned with Schematics."
           },
           "item_name": {
             "type": "string",
-            "description": "Catalog item name"
+            "description": "The name of the software that you chose to install from the IBM Cloud catalog."
           },
           "item_readme_url": {
             "type": "string",
-            "description": "Catalog item readme url"
+            "description": "The URL to the readme file of the software template in the IBM Cloud catalog."
           },
           "item_url": {
             "type": "string",
-            "description": "Catalog item url"
+            "description": "The URL to the software template in the IBM Cloud catalog."
           },
           "launch_url": {
             "type": "string",
-            "description": "Catalog item launch url"
+            "description": "The URL to the dashboard to access your software. "
           },
           "offering_version": {
             "type": "string",
-            "description": "Catalog item offering version"
+            "description": "The version of the software template that you chose to install from the IBM Cloud catalog. "
           }
         },
-        "description": "CatalogRef -"
+        "description": "Information about the software template that you chose from the IBM Cloud catalog. This information is returned for IBM Cloud catalog offerings only. "
       },
       "EnvVariableRequest": {
         "type": "array",
-        "description": "EnvVariableRequest ..",
+        "description": "A list of environment variables that you want to apply during the \nexecution of a bash script. Environment variables must be provided as \nkey value pairs. You can define environment variables  for IBM Cloud\n catalog offerings that are provisioned by using a bash script.",
         "items": {
-          "type": "object"
+          "type": "object",
+          "description": "One variable is a map where one entry is there with key as name of the env var and the value as value. "
         }
+      },
+      "EnvValueUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Environment variable name"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value for environment variable"
+          }
+        },
+        "description": "EnvValueUpdateRequest"
       },
       "EnvVariableResponse": {
         "type": "object",
         "properties": {
           "hidden": {
             "type": "boolean",
-            "description": "Env variable is hidden"
+            "description": "Environment variable is hidden"
           },
           "name": {
             "type": "string",
-            "description": "Env variable name"
+            "description": "Environment variable name"
           },
           "secure": {
             "type": "boolean",
-            "description": "Env variable is secure"
+            "description": "Environment variable is secure"
           },
           "value": {
             "type": "string",
-            "description": "Value for env variable"
+            "description": "Value for environment variable"
           }
         },
         "description": "EnvVariableResponse -"
@@ -6595,22 +6905,22 @@
         "properties": {
           "engine_name": {
             "type": "string",
-            "description": "Engine name"
+            "description": "The provisioning engine that was used for the action."
           },
           "engine_version": {
             "type": "string",
-            "description": "Engine version"
+            "description": "The version of the provisioning engine that was used for the action."
           },
           "id": {
             "type": "string",
-            "description": "Engine id"
+            "description": "The ID that was assigned to your Terraform template of IBM Cloud catalog software template."
           },
           "log_store_url": {
             "type": "string",
-            "description": "Log store url"
+            "description": "The URL to access the logs that were created during the plan, apply, or destroy action. "
           }
         },
-        "description": "LogStoreResponse -"
+        "description": "Information about the provisioning engine and log file URL for the most recent action that ran against your workspace."
       },
       "LogStoreResponseList": {
         "type": "object",
@@ -6623,7 +6933,7 @@
             }
           }
         },
-        "description": "LogStoreResponseList -"
+        "description": "Information about the log file URL for the most recent action that ran against your workspace."
       },
       "LogSummary": {
         "type": "object",
@@ -6679,7 +6989,7 @@
       },
       "OutputValues": {
         "type": "array",
-        "description": "OutputValues -",
+        "description": "Information about the Terraform output values that are defined in the Terraform template or IBM Cloud software template.",
         "items": {
           "$ref": "#/components/schemas/OutputValues_inner"
         }
@@ -6689,30 +6999,30 @@
         "properties": {
           "account_id": {
             "type": "string",
-            "description": "Account id"
+            "description": "The ID of the account for which you listed the resource groups."
           },
           "crn": {
             "type": "string",
-            "description": "CRN"
+            "description": "The CRN of the resource group."
           },
           "default": {
             "type": "boolean",
-            "description": "default"
+            "description": "If set to **true**, the resource group is used as the default resource group for your account. If set to **false**, the resource group is not used as the default resource group in your account."
           },
           "name": {
             "type": "string",
-            "description": "Resource group name"
+            "description": "The name of the resource group."
           },
           "resource_group_id": {
             "type": "string",
-            "description": "Resource group id"
+            "description": "The ID of the resource group."
           },
           "state": {
             "type": "string",
-            "description": "Resource group state"
+            "description": "The state of the resource group."
           }
         },
-        "description": "ResourceGroupResponse -"
+        "description": "Information about the resource group."
       },
       "SharedTargetData": {
         "type": "object",
@@ -6723,7 +7033,7 @@
           },
           "cluster_id": {
             "type": "string",
-            "description": "Cluster id"
+            "description": "The ID of the cluster where you want to provision the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           },
           "cluster_name": {
             "type": "string",
@@ -6735,22 +7045,22 @@
           },
           "entitlement_keys": {
             "type": "array",
-            "description": "Entitlement keys",
+            "description": "The entitlement key that you want to use to install IBM Cloud entitled software.",
             "items": {
               "type": "object"
             }
           },
           "namespace": {
             "type": "string",
-            "description": "Target namespace"
+            "description": "The Kubernetes namespace or OpenShift project where the resources of all IBM Cloud catalog templates that are included in the catalog offering are deployed into."
           },
           "region": {
             "type": "string",
-            "description": "Target region"
+            "description": "The IBM Cloud region that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           },
           "resource_group_id": {
             "type": "string",
-            "description": "Target resource group id"
+            "description": "The ID of the resource group that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           },
           "worker_count": {
             "type": "integer",
@@ -6762,14 +7072,14 @@
             "description": "Cluster worker type"
           }
         },
-        "description": "SharedTargetData -"
+        "description": "Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template."
       },
       "SharedTargetDataResponse": {
         "type": "object",
         "properties": {
           "cluster_id": {
             "type": "string",
-            "description": "Target cluster id"
+            "description": "The ID of the cluster where you want to provision the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           },
           "cluster_name": {
             "type": "string",
@@ -6777,25 +7087,25 @@
           },
           "entitlement_keys": {
             "type": "array",
-            "description": "Entitlement keys",
+            "description": "The entitlement key that you want to use to install IBM Cloud entitled software.",
             "items": {
               "type": "object"
             }
           },
           "namespace": {
             "type": "string",
-            "description": "Target namespace"
+            "description": "The Kubernetes namespace or OpenShift project where the resources of all IBM Cloud catalog templates that are included in the catalog offering are deployed into."
           },
           "region": {
             "type": "string",
-            "description": "Target region"
+            "description": "The IBM Cloud region that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           },
           "resource_group_id": {
             "type": "string",
-            "description": "Target resource group id"
+            "description": "The ID of the resource group that you want to use for the resources of all IBM Cloud catalog templates that are included in the catalog offering."
           }
         },
-        "description": "SharedTargetDataResponse -"
+        "description": "Information that is shared across templates in IBM Cloud catalog offerings. This information is not provided when you create a workspace from your own Terraform template."
       },
       "SharedDatasetCreateRequest": {
         "type": "object",
@@ -7037,39 +7347,39 @@
         "properties": {
           "engine_name": {
             "type": "string",
-            "description": "Engine name"
+            "description": "The provisioning engine that was used to apply the Terraform template or IBM Cloud catalog software template."
           },
           "engine_version": {
             "type": "string",
-            "description": "Engine version"
+            "description": "The version of the provisioning engine that was used."
           },
           "id": {
             "type": "string",
-            "description": "State store id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "state_store_url": {
             "type": "string",
-            "description": "State store url"
+            "description": "The URL where the Terraform statefile (`terraform.tfstate`) is stored. You can use the statefile to find an overview of IBM Cloud resources that were created by Schematics. Schematics uses the statefile as an inventory list to determine future create, update, or deletion actions."
           }
         },
-        "description": "StateStoreResponse -"
+        "description": "Information about workspace runtime data. "
       },
       "StateStoreResponseList": {
         "type": "object",
         "properties": {
           "runtime_data": {
             "type": "array",
-            "description": "List of state stores",
+            "description": "Information about workspace runtime data. ",
             "items": {
               "$ref": "#/components/schemas/StateStoreResponse"
             }
           }
         },
-        "description": "StateStoreResponseList -"
+        "description": "Information about the Terraform statefile URL. "
       },
       "StatusMessages": {
         "type": "array",
-        "description": "StatusMessages -",
+        "description": "Information about the success or failure of your action, including a success or error code and the timestamp when the action succeeded or failed.",
         "items": {
           "type": "string"
         }
@@ -7096,7 +7406,7 @@
       },
       "Tags": {
         "type": "array",
-        "description": "Tags -",
+        "description": "A list of tags that you want to associate with your workspace.",
         "items": {
           "type": "string"
         }
@@ -7110,14 +7420,14 @@
       },
       "TemplateLogStoreString": {
         "type": "string",
-        "description": "TemplateLogStoreString -"
+        "description": "The Terraform logs for the most recent workspace action."
       },
       "TemplateMetadata": {
         "type": "array",
-        "description": "TemplateMetadata -",
+        "description": "Information about workspace variable metadata.",
         "items": {
           "type": "object",
-          "description": "Metadata"
+          "description": "A list of input variables that are associated with the workspace. "
         }
       },
       "TemplateReadme": {
@@ -7125,10 +7435,10 @@
         "properties": {
           "readme": {
             "type": "string",
-            "description": "Readme string"
+            "description": "The `README.md` file for the template that your workspace points to."
           }
         },
-        "description": "TemplateReadme -"
+        "description": "The `README.md` file for the template that your workspace points to."
       },
       "TemplateTarRequest": {
         "type": "object",
@@ -7146,11 +7456,11 @@
         "properties": {
           "branch": {
             "type": "string",
-            "description": "Repo branch"
+            "description": "The branch in GitHub where your Terraform template is stored. "
           },
           "release": {
             "type": "string",
-            "description": "Repo release"
+            "description": "The release tag in GitHub of your Terraform template."
           },
           "repo_sha_value": {
             "type": "string",
@@ -7158,21 +7468,21 @@
           },
           "repo_url": {
             "type": "string",
-            "description": "Repo URL"
+            "description": "The URL to the repository where the IBM Cloud catalog software template is stored. "
           },
           "url": {
             "type": "string",
-            "description": "Source URL"
+            "description": "The URL to the GitHub or GitLab repository where your Terraform and public bit bucket template is stored. For more information of the environment variable syntax, see [Create workspace new](/docs/schematics?topic=schematics-schematics-cli-reference#schematics-workspace-new) "
           }
         },
-        "description": "TemplateRepoRequest -"
+        "description": "Input parameter to specify the source repository where your Schematics template is stored."
       },
       "TemplateRepoResponse": {
         "type": "object",
         "properties": {
           "branch": {
             "type": "string",
-            "description": "Repo branch"
+            "description": "The branch in GitHub where your Terraform template is stored. "
           },
           "full_url": {
             "type": "string",
@@ -7184,7 +7494,7 @@
           },
           "release": {
             "type": "string",
-            "description": "Repo release"
+            "description": "The release tag in GitHub of your Terraform template."
           },
           "repo_sha_value": {
             "type": "string",
@@ -7192,14 +7502,14 @@
           },
           "repo_url": {
             "type": "string",
-            "description": "Repo URL"
+            "description": "The URL to the repository where the IBM Cloud catalog software template is stored. "
           },
           "url": {
             "type": "string",
-            "description": "Source URL"
+            "description": "The URL to the GitHub or GitLab repository where your Terraform template is stored. "
           }
         },
-        "description": "TemplateRepoResponse -"
+        "description": "Information about the Terraform template that your workspace points to."
       },
       "TemplateRepoTarUploadResponse": {
         "type": "object",
@@ -7257,11 +7567,11 @@
         "properties": {
           "folder": {
             "type": "string",
-            "description": "Template folder name"
+            "description": "The subfolder in GitHub or GitLab where your Terraform templates are stored. If your template is stored in the root directory, `.` is returned."
           },
           "id": {
             "type": "string",
-            "description": "Template id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "null_resources": {
             "type": "array",
@@ -7272,14 +7582,14 @@
           },
           "related_resources": {
             "type": "array",
-            "description": "List of related resources",
+            "description": "Information about the IBM Cloud resources that are associated with your workspace.",
             "items": {
               "type": "object"
             }
           },
           "resources": {
             "type": "array",
-            "description": "List of resources",
+            "description": "Information about the IBM Cloud resources that are associated with your workspace.",
             "items": {
               "type": "object"
             }
@@ -7291,14 +7601,14 @@
           },
           "template_type": {
             "type": "string",
-            "description": "Type of templaes"
+            "description": "The Terraform version that was used to apply your template."
           }
         },
         "description": "TemplateResources -"
       },
       "TemplateResourcesList": {
         "type": "array",
-        "description": "TemplateResourcesList -",
+        "description": "Information about the IBM Cloud resources that are associated with your workspace.",
         "items": {
           "$ref": "#/components/schemas/TemplateResources"
         }
@@ -7308,23 +7618,23 @@
         "properties": {
           "engine_cmd": {
             "type": "string",
-            "description": "Engine command"
+            "description": "The command that was used to apply the Terraform template or IBM Cloud catalog software template."
           },
           "engine_name": {
             "type": "string",
-            "description": "Engine name"
+            "description": "The provisioning engine that was used to apply the Terraform template or IBM Cloud catalog software template."
           },
           "engine_version": {
             "type": "string",
-            "description": "Engine version"
+            "description": "The version of the provisioning engine that was used."
           },
           "id": {
             "type": "string",
-            "description": "Template id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "log_store_url": {
             "type": "string",
-            "description": "Log store url"
+            "description": "The URL to access the logs that were created during the creation, update, or deletion of your IBM Cloud resources. "
           },
           "output_values": {
             "type": "array",
@@ -7345,10 +7655,10 @@
           },
           "state_store_url": {
             "type": "string",
-            "description": "State store URL"
+            "description": "The URL where the Terraform statefile (`terraform.tfstate`) is stored. You can use the statefile to find an overview of IBM Cloud resources that were created by Schematics. Schematics uses the statefile as an inventory list to determine future create, update, or deletion actions."
           }
         },
-        "description": "TemplateRunTimeDataResponse -"
+        "description": "Information about the provisioning engine, state file, and runtime logs. "
       },
       "TemplateSourceDataRequest": {
         "type": "object",
@@ -7358,15 +7668,15 @@
           },
           "folder": {
             "type": "string",
-            "description": "Folder name"
+            "description": "The subfolder in your GitHub or GitLab repository where your Terraform template is stored."
           },
           "init_state_file": {
             "type": "string",
-            "description": "Init state file"
+            "description": "The content of an existing Terraform statefile that you want to import in to your workspace. To get the content of a Terraform statefile for a specific Terraform template in an existing workspace, run `ibmcloud terraform state pull --id <workspace_id> --template <template_id>`."
           },
           "type": {
             "type": "string",
-            "description": "Template type"
+            "description": "The Terraform version that you want to use to run your Terraform code. Enter `terraform_v0.12` to use Terraform version 0.12, and `terraform_v0.11` to use Terraform version 0.11. If no value is specified, the Terraform config files are run with Terraform version 0.11. Make sure that your Terraform config files are compatible with the Terraform version that you select."
           },
           "uninstall_script_name": {
             "type": "string",
@@ -7374,7 +7684,7 @@
           },
           "values": {
             "type": "string",
-            "description": "Value"
+            "description": "A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `\"autoscaling:\n  enabled: true\n  minReplicas: 2\"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider. "
           },
           "values_metadata": {
             "type": "array",
@@ -7387,7 +7697,7 @@
             "$ref": "#/components/schemas/VariablesRequest"
           }
         },
-        "description": "TemplateSourceDataRequest -"
+        "description": "Input parameters to define input variables for your Schematics template."
       },
       "TemplateSourceDataResponse": {
         "type": "object",
@@ -7401,7 +7711,7 @@
           },
           "folder": {
             "type": "string",
-            "description": "Folder name"
+            "description": "The subfolder in your GitHub or GitLab repository where your Terraform template is stored. If your template is stored in the root directory, `.` is returned."
           },
           "has_githubtoken": {
             "type": "boolean",
@@ -7409,11 +7719,11 @@
           },
           "id": {
             "type": "string",
-            "description": "Template id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "template_type": {
             "type": "string",
-            "description": "Template tyoe"
+            "description": "The Terraform version that was used to run your Terraform code."
           },
           "uninstall_script_name": {
             "type": "string",
@@ -7421,24 +7731,24 @@
           },
           "values": {
             "type": "string",
-            "description": "Values"
+            "description": "A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `\"\"autoscaling:\n  enabled: true\n  minReplicas: 2\"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider. "
           },
           "values_metadata": {
             "type": "array",
-            "description": "List of values metadata",
+            "description": "A list of input variables that are associated with the workspace. ",
             "items": {
               "type": "object"
             }
           },
           "values_url": {
             "type": "string",
-            "description": "Values URL"
+            "description": "The API endpoint to access the input variables that you defined for your template. "
           },
           "variablestore": {
             "$ref": "#/components/schemas/VariablesResponse"
           }
         },
-        "description": "TemplateSourceDataResponse -"
+        "description": "Information about the input variables that are used in the template."
       },
       "TemplateStateStore": {
         "type": "object",
@@ -7462,7 +7772,7 @@
             }
           }
         },
-        "description": "TemplateStateStore -"
+        "description": "The content of the Terraform statefile (`terraform.tfstate`). "
       },
       "TemplateValues": {
         "type": "object",
@@ -7474,39 +7784,43 @@
             }
           }
         },
-        "description": "TemplateValues -"
+        "description": "Information about the input variables that are declared in the template that your workspace points to."
       },
       "UserValues": {
         "type": "object",
         "properties": {
           "env_values": {
-            "$ref": "#/components/schemas/EnvVariableRequest"
+            "$ref": "#/components/schemas/EnvVariableResponse"
           },
           "values": {
             "type": "string",
-            "description": "User values"
+            "description": "A list of variable values that you want to apply during the Helm chart installation. The list must be provided in JSON format, such as `\"autoscaling:\n  enabled: true\n  minReplicas: 2\"`. The values that you define here override the default Helm chart values. This field is supported only for IBM Cloud catalog offerings that are provisioned by using the Terraform Helm provider. "
           },
           "variablestore": {
             "$ref": "#/components/schemas/VariablesResponse"
           }
         },
-        "description": "UserValues -"
+        "description": "Information about workspace input variables."
       },
       "UserValuesRequest": {
         "type": "object",
         "properties": {
           "env_values": {
-            "$ref": "#/components/schemas/EnvVariableRequest"
+            "type": "array",
+            "description": "List of environment variables to update",
+            "items": {
+              "$ref": "#/components/schemas/EnvValueUpdateRequest"
+            }
           },
           "values": {
             "type": "string",
             "description": "User values"
           },
           "variablestore": {
-            "$ref": "#/components/schemas/VariablesRequest"
+            "$ref": "#/components/schemas/VariablesUpdateRequest"
           }
         },
-        "description": "UserValuesRequest -"
+        "description": "UserValuesRequest - Update the variablestore or values (helm) and env values of your workspace."
       },
       "VariablesRequest": {
         "type": "array",
@@ -7515,11 +7829,18 @@
           "$ref": "#/components/schemas/WorkspaceVariableRequest"
         }
       },
+      "VariablesUpdateRequest": {
+        "type": "array",
+        "description": "VariablesUpdateRequest - for updating tf variables in put /values api",
+        "items": {
+          "$ref": "#/components/schemas/WorkspaceVariableUpdateRequest"
+        }
+      },
       "VariablesResponse": {
         "type": "array",
-        "description": "VariablesResponse -",
+        "description": "Information about the input variables that your template uses.",
         "items": {
-          "$ref": "#/components/schemas/WorkspaceVariableResponse"
+          "$ref": "#/components/schemas/WorkspaceVariableRequest"
         }
       },
       "VersionResponse": {
@@ -7527,23 +7848,28 @@
         "properties": {
           "builddate": {
             "type": "string",
-            "description": "Build data"
+            "x-go-name": "BuildDate",
+            "description": "The date when the API version was built."
           },
           "buildno": {
             "type": "string",
-            "description": "Build number"
+            "x-go-name": "BuildNo",
+            "description": "The build number that the API is based on."
           },
           "commitsha": {
             "type": "string",
-            "description": "Commit SHA"
+            "x-go-name": "CommitSHA",
+            "description": "The SHA value for the Git commit that represents the latest version of the API."
           },
           "helm_provider_version": {
             "type": "string",
-            "description": "Version number of 'Helm provider for Terraform'"
+            "x-go-name": "HelmProviderVersion",
+            "description": "The Terraform Helm provider version that is used when you install Helm charts with Schematics."
           },
           "helm_version": {
             "type": "string",
-            "description": "Helm Version"
+            "x-go-name": "HelmVersion",
+            "description": "The Helm version that is used when you install Helm charts with Schematics."
           },
           "supported_template_types": {
             "type": "array",
@@ -7554,30 +7880,32 @@
           },
           "terraform_provider_version": {
             "type": "string",
-            "description": "Terraform provider versions"
+            "x-go-name": "TerraformProviderVersion",
+            "description": "The version of the IBM Cloud Terraform provider plug-in that is used when you apply Terraform templates with Schematics."
           },
           "terraform_version": {
             "type": "string",
-            "description": "Terraform versions"
+            "x-go-name": "TerraformVersion",
+            "description": "The Terraform version that is used when you apply Terraform templates with Schematics."
           }
         },
-        "description": "VersionResponse -"
+        "description": "Successful response when you retrieve detailed information about the IBM Cloud Schematics API. "
       },
       "WorkspaceActivityOptions": {
+        "description": "A list of resource that you want to target. To target a resource, you must use the resource address, such as `ibm_is_instance.vm1`.",
         "type": "object",
         "properties": {
           "action_options": {
             "$ref": "#/components/schemas/WorkspaceActivityOptionsTemplate"
           }
-        },
-        "description": "Action Options"
+        }
       },
       "WorkspaceActivityOptionsTemplate": {
         "type": "object",
         "properties": {
           "target": {
             "type": "array",
-            "description": "Action targets",
+            "description": "A list of Terraform resource addresses to target.",
             "items": {
               "type": "string"
             }
@@ -7590,62 +7918,62 @@
             }
           }
         },
-        "description": "Action Options Template ..."
+        "description": "The resources to target. "
       },
       "WorkspaceActivityAction": {
         "type": "string",
-        "description": "WorkspaceActivityAction activity action type"
+        "description": "The type of action that ran against your workspace. \n\n\n * **APPLY**: The apply action was created when you used the `PUT /v1/workspaces/{id}/apply` API to apply a Terraform template in IBM Cloud. \n * **DESTROY**: The destroy action was created when you used the `DELETE /v1/workspaces/{id}/destroy` API to remove all resources that are associated with your workspace. \n * **PLAN**: The plan action was created when you used the `POST /v1/workspaces/{id}/plan` API to create a Terraform execution plan. "
       },
       "WorkspaceActivityStatus": {
         "type": "string",
-        "description": "WorkspaceActivityStatus activity status type"
+        "description": "The status of your action. To retrieve the URL to your action logs, use the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API.  \n\n\n * **COMPLETED**: The action completed successfully. \n* **CREATED**: The action was created, but the provisioning, modification, or removal of IBM Cloud resources has not started yet. \n* **FAILED**: An error occurred during the plan, apply, or destroy action. Use the activity ID to retrieve the URL to the log files for your action. \n* **IN PROGRESS**: The action is in progress. You can use the `log_url` to access the logs.  "
       },
       "WorkspaceActivityApplyResult": {
         "type": "object",
         "properties": {
           "activityid": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the activity that was created when you initiated a request to apply a Terraform template. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. "
           }
         },
-        "description": "WorkspaceActivityApplyResult -"
+        "description": "Response parameter for successfully initiating a request to apply a Terraform template in IBM Cloud."
       },
       "WorkspaceActivityDestroyResult": {
         "type": "object",
         "properties": {
           "activityid": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the activity that was created for your IBM Cloud resource removal action. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. "
           }
         },
-        "description": "WorkspaceActivityDestroyResult -"
+        "description": "Response parameters for successfully initiating a request to remove IBM Cloud resources."
       },
       "WorkspaceActivityPlanResult": {
         "type": "object",
         "properties": {
           "activityid": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the activity that ran against the workspace. This activity can be a `PLAN`, `APPLY`, or `DESTROY` action. You use the activity ID to retrieve the log URL with the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. "
           }
         },
-        "description": "WorkspaceActivityPlanResult -"
+        "description": "Response parameter when you create a Terraform execution plan."
       },
       "WorkspaceActivityRefreshResult": {
         "type": "object",
         "properties": {
           "activityid": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the activity that was created for your workspace refresh action. You can use the ID to retrieve the URL to your log file by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API. "
           }
         },
-        "description": "WorkspaceActivityRefreshResult -"
+        "description": "Response parameters for successfully initiating a request to refresh the Terraform statefile of a workspace."
       },
       "WorkspaceActivity": {
         "type": "object",
         "properties": {
           "action_id": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the action. You can use the ID to retrieve the URL to the logs for that action by using the `GET /v1/workspaces/{id}/actions/{action_id}/logs` API."
           },
           "message": {
             "$ref": "#/components/schemas/StatusMessages"
@@ -7655,12 +7983,12 @@
           },
           "performed_at": {
             "type": "string",
-            "description": "Activity performed at",
+            "description": "The timestamp when the action was initiated.",
             "format": "date-time"
           },
           "performed_by": {
             "type": "string",
-            "description": "Activity performed by"
+            "description": "The user ID who initiated the action."
           },
           "status": {
             "$ref": "#/components/schemas/WorkspaceActivityStatus"
@@ -7673,14 +8001,14 @@
             }
           }
         },
-        "description": "WorkspaceActivity -"
+        "description": "Information about the actions of a workspace."
       },
       "WorkspaceActivityLogs": {
         "type": "object",
         "properties": {
           "action_id": {
             "type": "string",
-            "description": "Activity id"
+            "description": "The ID of the action that ran against your workspace."
           },
           "name": {
             "$ref": "#/components/schemas/WorkspaceActivityAction"
@@ -7693,14 +8021,14 @@
             }
           }
         },
-        "description": "WorkspaceActivityLogs -"
+        "description": "Information about the workspace action logs. "
       },
       "WorkspaceActivityTemplate": {
         "type": "object",
         "properties": {
           "end_time": {
             "type": "string",
-            "description": "End time for the activity",
+            "description": "The timestamp when the action completed or failed.",
             "format": "date-time"
           },
           "log_summary": {
@@ -7708,15 +8036,15 @@
           },
           "log_url": {
             "type": "string",
-            "description": "Log URL"
+            "description": "The URL to access the logs that were created during the plan, apply, or destroy action. "
           },
           "message": {
             "type": "string",
-            "description": "Message"
+            "description": "Information about the success or failure of your action, including a success or error code and the timestamp when the action succeeded or failed."
           },
           "start_time": {
             "type": "string",
-            "description": "Activity start time",
+            "description": "The timestamp when the action started.",
             "format": "date-time"
           },
           "status": {
@@ -7724,11 +8052,11 @@
           },
           "template_id": {
             "type": "string",
-            "description": "Template id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "template_type": {
             "type": "string",
-            "description": "Template type"
+            "description": "The type of template."
           }
         },
         "description": "WorkspaceActivityTemplate -"
@@ -7742,18 +8070,18 @@
         "properties": {
           "log_url": {
             "type": "string",
-            "description": "Log URL"
+            "description": "The URL to access the logs that were created during the plan, apply, or destroy action. "
           },
           "template_id": {
             "type": "string",
-            "description": "Template id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "template_type": {
             "type": "string",
-            "description": "Template type"
+            "description": "The type of template."
           }
         },
-        "description": "WorkspaceActivityTemplateLogs -"
+        "description": "Information about the log URL for an action that ran for a template against your workspace."
       },
       "WorkspaceActivities": {
         "type": "object",
@@ -7767,14 +8095,14 @@
           },
           "workspace_id": {
             "type": "string",
-            "description": "Workspace id"
+            "description": "The ID of the workspace."
           },
           "workspace_name": {
             "type": "string",
-            "description": "Workspace name"
+            "description": "The name of the workspace."
           }
         },
-        "description": "WorkspaceActivities -"
+        "description": "Response parameter for listing actions for a workspace."
       },
       "WorkspaceBulkDeleteRequest": {
         "type": "object",
@@ -7838,26 +8166,26 @@
           },
           "description": {
             "type": "string",
-            "description": "Workspace description"
+            "description": "The description of the workspace."
           },
           "location": {
             "type": "string",
-            "description": "Workspace location"
+            "description": "The location where you want to create your Schematics workspace and run Schematics actions. The location that you enter must match the API endpoint that you use. For example, if you use the Frankfurt API endpoint, you must specify `eu-de` as your location. If you use an API endpoint for a geography and you do not specify a location, Schematics determines the location based on availability. "
           },
           "name": {
             "type": "string",
-            "description": "Workspace name"
+            "description": "The name of your workspace. The name can be up to 128 characters long and can include alphanumeric characters, spaces, dashes, and underscores. When you create a workspace for your own Terraform template, consider including the microservice component that you set up with your Terraform template and the IBM Cloud environment where you want to deploy your resources in your name."
           },
           "resource_group": {
             "type": "string",
-            "description": "Workspace resource group"
+            "description": "The ID of the resource group where you want to provision the workspace."
           },
           "shared_data": {
             "$ref": "#/components/schemas/SharedTargetData"
           },
           "tags": {
             "type": "array",
-            "description": "Workspace tags",
+            "description": "A list of tags that are associated with the workspace.",
             "items": {
               "type": "string"
             }
@@ -7874,7 +8202,7 @@
           },
           "type": {
             "type": "array",
-            "description": "List of Workspace type",
+            "description": "The Terraform version that you want to use to run your Terraform code. Enter `terraform_v0.12` to use Terraform version 0.12, and `terraform_v0.11` to use Terraform version 0.11. If no value is specified, the Terraform config files are run with Terraform version 0.11. Make sure that your Terraform config files are compatible with the Terraform version that you select.",
             "items": {
               "type": "string"
             }
@@ -7883,7 +8211,7 @@
             "$ref": "#/components/schemas/WorkspaceStatusRequest"
           }
         },
-        "description": "WorkspaceCreateRequest - request passed in create"
+        "description": "Input parameter to create a workspace"
       },
       "WorkspaceJobResponse": {
         "type": "object",
@@ -7909,12 +8237,12 @@
           },
           "created_at": {
             "type": "string",
-            "description": "Workspace created at",
+            "description": "The timestamp when the workspace was created.",
             "format": "date-time"
           },
           "created_by": {
             "type": "string",
-            "description": "Workspace created by"
+            "description": "The user ID that created the workspace."
           },
           "crn": {
             "type": "string",
@@ -7922,32 +8250,32 @@
           },
           "description": {
             "type": "string",
-            "description": "Workspace description"
+            "description": "The description of the workspace."
           },
           "id": {
             "type": "string",
-            "description": "Workspace id"
+            "description": "The unique identifier of the workspace."
           },
           "last_health_check_at": {
             "type": "string",
-            "description": "Last health checked at",
+            "description": "The timestamp when the last health check was performed by Schematics.",
             "format": "date-time"
           },
           "location": {
             "type": "string",
-            "description": "Workspace location"
+            "description": "The IBM Cloud location where your workspace was provisioned."
           },
           "name": {
             "type": "string",
-            "description": "Workspace name"
+            "description": "The name of the workspace."
           },
           "resource_group": {
             "type": "string",
-            "description": "Workspace resource group"
+            "description": "The resource group the workspace was provisioned in."
           },
           "runtime_data": {
             "type": "array",
-            "description": "Workspace runtime data",
+            "description": "Information about the provisioning engine, state file, and runtime logs. ",
             "items": {
               "$ref": "#/components/schemas/TemplateRunTimeDataResponse"
             }
@@ -7960,14 +8288,14 @@
           },
           "tags": {
             "type": "array",
-            "description": "Workspace tags",
+            "description": "A list of tags that are associated with the workspace.",
             "items": {
               "type": "string"
             }
           },
           "template_data": {
             "type": "array",
-            "description": "Workspace template data",
+            "description": "Information about the Terraform or IBM Cloud software template that you want to use.",
             "items": {
               "$ref": "#/components/schemas/TemplateSourceDataResponse"
             }
@@ -7981,19 +8309,19 @@
           },
           "type": {
             "type": "array",
-            "description": "List of Workspace type",
+            "description": "The Terraform version that was used to run your Terraform code.",
             "items": {
               "type": "string"
             }
           },
           "updated_at": {
             "type": "string",
-            "description": "Workspace updated at",
+            "description": "The timestamp when the workspace was last updated.",
             "format": "date-time"
           },
           "updated_by": {
             "type": "string",
-            "description": "Workspace updated by"
+            "description": "The user ID that updated the workspace."
           },
           "workspace_status": {
             "$ref": "#/components/schemas/WorkspaceStatusResponse"
@@ -8002,7 +8330,7 @@
             "$ref": "#/components/schemas/WorkspaceStatusMessage"
           }
         },
-        "description": "WorkspaceResponse - request returned by create"
+        "description": "Overview of workspace details"
       },
       "WorkspaceResponseList": {
         "required": [
@@ -8013,74 +8341,74 @@
         "properties": {
           "count": {
             "type": "integer",
-            "description": "Total number of workspaces",
+            "description": "The number of workspaces in the IBM Cloud account that you have access to and that matched your search criteria.",
             "format": "int64"
           },
           "limit": {
             "type": "integer",
-            "description": "Limit for the list",
+            "description": "The `limit` value that you set in your API request and that represents the maximum number of workspaces that you wanted to list. ",
             "format": "int64"
           },
           "offset": {
             "type": "integer",
-            "description": "Offset for the list",
+            "description": "The `offset` value that you set in your API request. The offset value represents the position number of the workspace from which you wanted to start listing your workspaces.",
             "format": "int64"
           },
           "workspaces": {
             "type": "array",
-            "description": "List of Workspaces",
+            "description": "The list of workspaces that was included in your API response.",
             "items": {
               "$ref": "#/components/schemas/WorkspaceResponse"
             }
           }
         },
-        "description": "WorkspaceResponseList -"
+        "description": "Response parameters when listing workspaces from your IBM Cloud account."
       },
       "WorkspaceStatus": {
         "type": "string",
-        "description": "Workspace status type"
+        "description": "The status of the workspace. \n\n **Active**: After you successfully ran your infrastructure code by applying your Terraform execution plan, the state of your workspace changes to `Active`. \n\n **Connecting**: Schematics tries to connect to the template in your source repo. If successfully connected, the template is downloaded and metadata, such as input parameters, is extracted. After the template is downloaded, the state of the workspace changes to `Scanning`. \n\n **Draft**: The workspace is created without a reference to a GitHub or GitLab repository. \n\n **Failed**: If errors occur during the execution of your infrastructure code in IBM Cloud Schematics, your workspace status is set to `Failed`. \n\n **Inactive**: The Terraform template was scanned successfully and the workspace creation is complete. You can now start running Schematics plan and apply actions to provision the IBM Cloud resources that you specified in your template. If you have an `Active` workspace and decide to remove all your resources, your workspace is set to `Inactive` after all your resources are removed. \n\n **In progress**: When you instruct IBM Cloud Schematics to run your infrastructure code by applying your Terraform execution plan, the status of our workspace changes to `In progress`. \n\n **Scanning**: The download of the Terraform template is complete and vulnerability scanning started. If the scan is successful, the workspace state changes to `Inactive`. If errors in your template are found, the state changes to `Template Error`. \n\n **Stopped**: The Schematics plan, apply, or destroy action was cancelled manually. \n\n **Template Error**: The Schematics template contains errors and cannot be processed."
       },
       "WorkspaceStatusMessage": {
         "type": "object",
         "properties": {
           "status_code": {
             "type": "string",
-            "description": "Status code"
+            "description": "The success or error code that was returned for the last plan, apply, or destroy action that ran against your workspace."
           },
           "status_msg": {
             "type": "string",
-            "description": "Status message"
+            "description": "The success or error message that was returned for the last plan, apply, or destroy action that ran against your workspace. "
           }
         },
-        "description": "WorkspaceStatusMessage -"
+        "description": "Information about the last action that ran against the workspace."
       },
       "WorkspaceStatusRequest": {
         "type": "object",
         "properties": {
           "frozen": {
             "type": "boolean",
-            "description": "Frozen status"
+            "description": "If set to true, the workspace is frozen and changes to the workspace are disabled."
           },
           "frozen_at": {
             "type": "string",
-            "description": "Frozen at",
+            "description": "The timestamp when the workspace was frozen.",
             "format": "date-time"
           },
           "frozen_by": {
             "type": "string",
-            "description": "Frozen by"
+            "description": "The user ID that froze the workspace."
           },
           "locked": {
             "type": "boolean",
-            "description": "Locked status"
+            "description": "If set to true, the workspace is locked and disabled for changes."
           },
           "locked_by": {
             "type": "string",
-            "description": "Locked by"
+            "description": "The user ID that initiated a resource-related action, such as applying or destroying resources, that locked the workspace."
           },
           "locked_time": {
             "type": "string",
-            "description": "Locked at",
+            "description": "The timestamp when the workspace was locked.",
             "format": "date-time"
           }
         },
@@ -8091,39 +8419,39 @@
         "properties": {
           "frozen": {
             "type": "boolean",
-            "description": "Frozen status"
+            "description": "If set to true, the workspace is frozen and changes to the workspace are disabled."
           },
           "frozen_at": {
             "type": "string",
-            "description": "Frozen at",
+            "description": "The timestamp when the workspace was frozen.",
             "format": "date-time"
           },
           "frozen_by": {
             "type": "string",
-            "description": "Frozen by"
+            "description": "The user ID that froze the workspace."
           },
           "locked": {
             "type": "boolean",
-            "description": "Locked status"
+            "description": "If set to true, the workspace is locked and disabled for changes."
           },
           "locked_by": {
             "type": "string",
-            "description": "Locked by"
+            "description": "The user ID that initiated a resource-related action, such as applying or destroying resources, that locked the workspace."
           },
           "locked_time": {
             "type": "string",
-            "description": "Locked at",
+            "description": "The timestamp when the workspace was locked.",
             "format": "date-time"
           }
         },
-        "description": "WorkspaceStatusResponse -"
+        "description": "Response parameter that indicate if a workspace is frozen or locked. "
       },
       "WorkspaceStatusUpdateRequest": {
         "type": "object",
         "properties": {
           "frozen": {
             "type": "boolean",
-            "description": "Frozen status"
+            "description": "If set to true, the workspace is frozen and changes to the workspace are disabled."
           },
           "frozen_at": {
             "type": "string",
@@ -8148,14 +8476,14 @@
             "format": "date-time"
           }
         },
-        "description": "WorkspaceStatusUpdateRequest -"
+        "description": "Information about the updated workspace status."
       },
       "WorkspaceTemplateValuesResponse": {
         "type": "object",
         "properties": {
           "runtime_data": {
             "type": "array",
-            "description": "List of runtime data",
+            "description": "Information about the provisioning engine, state file, and runtime logs. ",
             "items": {
               "$ref": "#/components/schemas/TemplateRunTimeDataResponse"
             }
@@ -8165,13 +8493,13 @@
           },
           "template_data": {
             "type": "array",
-            "description": "List of source data",
+            "description": "Information about the input variables that are used in the template.",
             "items": {
               "$ref": "#/components/schemas/TemplateSourceDataResponse"
             }
           }
         },
-        "description": "WorkspaceTemplateValuesResponse -"
+        "description": "Information about the template that your workspace points to."
       },
       "WorkspaceUpdateRequest": {
         "type": "object",
@@ -8181,11 +8509,11 @@
           },
           "description": {
             "type": "string",
-            "description": "Workspace description"
+            "description": "The description of the workspace."
           },
           "name": {
             "type": "string",
-            "description": "Workspace name"
+            "description": "The name of the workspace."
           },
           "shared_data": {
             "$ref": "#/components/schemas/SharedTargetData"
@@ -8213,97 +8541,97 @@
             "$ref": "#/components/schemas/WorkspaceStatusMessage"
           }
         },
-        "description": "WorkspaceUpdateRequest - request passed in create"
+        "description": "Request parameter to update a workspace. "
       },
       "WorkspaceVariableRequest": {
         "type": "object",
         "properties": {
           "description": {
             "type": "string",
-            "description": "Variable description"
+            "description": "The description of your input variable."
           },
           "name": {
             "type": "string",
-            "description": "Variable name"
+            "description": "The name of the variable."
           },
           "secure": {
             "type": "boolean",
-            "description": "Variable is secure"
+            "description": "If set to `true`, the value of your input variable is protected and not returned in your API response."
           },
           "type": {
             "type": "string",
-            "description": "Variable type"
-          },
-          "use_default": {
-            "type": "boolean",
-            "description": "Variable uses default value; and is not over-ridden."
+            "description": "`Terraform v0.11` supports `string`, `list`, `map` data type. For more information, about the syntax, see [Configuring input variables](https://www.terraform.io/docs/configuration-0-11/variables.html). <br> `Terraform v0.12` additionally, supports `bool`, `number` and complex data types such as `list(type)`, `map(type)`, `object({attribute name=type,..})`, `set(type)`, `tuple([type])`. For more information, about the syntax to use the complex data type, see [Configuring variables](https://www.terraform.io/docs/configuration/variables.html#type-constraints)."
           },
           "value": {
             "type": "string",
-            "description": "Value of the Variable"
+            "description": "Enter the value as a string for the primitive types such as `bool`, `number`, `string`, and `HCL` format for the complex variables, as you provide in a `.tfvars` file. **You need to enter escaped string of `HCL` format for the complex variable value**. For more information, about how to declare variables in a terraform configuration file and provide value to schematics, see [Providing values for the declared variables](/docs/schematics?topic=schematics-create-tf-config#declare-variable)."
           }
         },
-        "description": "WorkspaceVariableRequest -"
+        "description": "Detailed information about the input variables that your template uses."
       },
-      "WorkspaceVariableResponse": {
+      "WorkspaceVariableUpdateRequest": {
         "type": "object",
         "properties": {
           "description": {
             "type": "string",
-            "description": "Variable descrption"
+            "description": "The description of your input variable."
           },
           "name": {
             "type": "string",
-            "description": "Variable name"
+            "description": "The name of the variable."
           },
           "secure": {
             "type": "boolean",
-            "description": "Variable is secure"
+            "description": "If set to `true`, the value of your input variable is protected and not returned in your API response."
+          },
+          "use_default": {
+            "type": "boolean",
+            "description": "If set to true, you are removing the overridden variable value from the .tfvars file. The next time plan or apply is executed, the default value for the variable in the Terraform template is used."
           },
           "type": {
             "type": "string",
-            "description": "Variable type"
+            "description": "`Terraform v0.11` supports `string`, `list`, `map` data type. For more information, about the syntax, see [Configuring input variables](https://www.terraform.io/docs/configuration-0-11/variables.html). <br> `Terraform v0.12` additionally, supports `bool`, `number` and complex data types such as `list(type)`, `map(type)`, `object({attribute name=type,..})`, `set(type)`, `tuple([type])`. For more information, about the syntax to use the complex data type, see [Configuring variables](https://www.terraform.io/docs/configuration/variables.html#type-constraints)."
           },
           "value": {
             "type": "string",
-            "description": "Value of the Variable"
+            "description": "Enter the value as a string for the primitive types such as `bool`, `number`, `string`, and `HCL` format for the complex variables, as you provide in a `.tfvars` file. **You need to enter escaped string of `HCL` format for the complex variable value**. For more information, about how to declare variables in a terraform configuration file and provide value to schematics, see [Providing values for the declared variables](/docs/schematics?topic=schematics-create-tf-config#declare-variable)."
           }
         },
-        "description": "WorkspaceVariableResponse -"
+        "description": "Detailed information about the input variables that your template uses."
       },
       "SchematicsLocations": {
         "type": "object",
         "properties": {
           "country": {
             "type": "string",
-            "description": "Country"
+            "description": "The country where the location is located. "
           },
           "geography": {
             "type": "string",
-            "description": "Geography"
+            "description": "The geography that the location belongs to. "
           },
           "id": {
             "type": "string",
-            "description": "Location id"
+            "description": "The ID of the location."
           },
           "kind": {
             "type": "string",
-            "description": "Kind"
+            "description": "The kind of location. "
           },
           "metro": {
             "type": "string",
-            "description": "Metro"
+            "description": "The metro area that the location belongs to. "
           },
           "multizone_metro": {
             "type": "string",
-            "description": "Multizone metro"
+            "description": "The multizone metro area that the location belongs to. "
           },
           "name": {
             "type": "string",
-            "description": "Location name"
+            "description": "The name of the location."
           }
         },
-        "description": "Schematics locations"
+        "description": "Information about the location."
       },
       "SchematicsResourceEnum": {
         "type": "string",
@@ -9464,25 +9792,25 @@
         "properties": {
           "folder": {
             "type": "string",
-            "description": "Output variable name"
+            "description": "The subfolder in the GitHub or GitLab repository where your Terraform template is stored. If the template is stored in the root directory, `.` is returned."
           },
           "id": {
             "type": "string",
-            "description": "Output variable id"
+            "description": "The ID that was assigned to your Terraform template or IBM Cloud catalog software template."
           },
           "output_values": {
             "type": "array",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "List of Output values",
+            "description": "A list of Terraform output values.",
             "items": {
               "type": "object"
             }
           },
           "value_type": {
             "type": "string",
-            "description": "Output variable type"
+            "description": "The Terraform version that was used to apply your template."
           }
         }
       },
