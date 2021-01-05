@@ -46,7 +46,7 @@ func (s *Service) Version(ctx context.Context) (*SupportedVersion, error) {
 	}
 
 	if code := resp.StatusCode(); code != 200 {
-		return nil, fmt.Errorf(`{"status_code": %d, "status": %q}`, code, resp.Status())
+		return nil, getAPIError("failed to get the schematic versions", resp.Body)
 	}
 	response := resp.JSON200
 
@@ -55,16 +55,16 @@ func (s *Service) Version(ctx context.Context) (*SupportedVersion, error) {
 	}
 
 	supportedVersions := map[string][]string{
-		"ansible":             []string{},
-		"ansible_provisioner": []string{},
-		"helm":                []string{},
-		"helm_provider":       []string{},
-		"ibm_cloud_provider":  []string{},
-		"kubernetes_provider": []string{},
-		"oc_client":           []string{},
-		"provider_restapi":    []string{},
-		"template_name":       []string{},
-		"terraform":           []string{},
+		"ansible":             {},
+		"ansible_provisioner": {},
+		"helm":                {},
+		"helm_provider":       {},
+		"ibm_cloud_provider":  {},
+		"kubernetes_provider": {},
+		"oc_client":           {},
+		"provider_restapi":    {},
+		"template_name":       {},
+		"terraform":           {},
 	}
 	for _, template := range *response.SupportedTemplateTypes {
 		for key, iface := range template {

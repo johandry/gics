@@ -2,7 +2,6 @@ package schematics
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	apiv1 "github.com/johandry/gics/schematics/api/v1"
@@ -51,7 +50,7 @@ func (s *Service) List(ctx context.Context) (*WorkspaceList, error) {
 	}
 
 	if code := resp.StatusCode(); code != 200 {
-		return nil, fmt.Errorf(`{"status_code": %d, "status": %q}`, code, resp.Status())
+		return nil, getAPIError("failed to list the workspaces", resp.Body)
 	}
 	response := resp.JSON200
 
