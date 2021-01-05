@@ -10,12 +10,18 @@ import (
 )
 
 const (
-	activityNameForCreate = "WORKSPACE_CREATE"
+	activityNameForCreate  = "WORKSPACE_CREATE"
+	activityNameForDestroy = "DESTROY"
 )
 
 const (
 	listWorkspaceActivitiesTimeout = 50
 )
+
+// NilActivity is an empty or nil activity that doesn't exists or already finished
+var NilActivity = NewActivity("", nil)
+
+const nilActivityID = "0"
 
 // Activity encapsupate the information about a Schematics workspace activity
 type Activity struct {
@@ -30,6 +36,47 @@ type Activity struct {
 	WorkspaceID string    `json:"workspace_id,omitempty" yaml:"workspace_id,omitempty"`
 }
 
+// NewActivity creates a new Activity from a WorkspaceActivity
+func NewActivity(workspaceID string, act *apiv1.WorkspaceActivity) Activity {
+	if workspaceID == "" || act == nil {
+		return Activity{
+			ID: nilActivityID,
+		}
+	}
+
+	template := apiv1.WorkspaceActivityTemplate{}
+	if act.Templates != nil && len(*act.Templates) > 0 {
+		template = (*act.Templates)[0]
+	}
+	activity := Activity{
+		ID:          stringValue(act.ActionId),
+		PerformedBy: stringValue(act.PerformedBy),
+		Message:     stringValue(template.Message),
+		WorkspaceID: workspaceID,
+	}
+	if act.Name != nil {
+		activity.Name = string(*act.Name)
+	}
+	if act.Status != nil {
+		activity.Status = string(*act.Status)
+	}
+	if template.StartTime != nil {
+		activity.StartTime = *template.StartTime
+	}
+	if template.EndTime != nil {
+		activity.EndTime = *template.EndTime
+	}
+	if act.PerformedAt != nil {
+		activity.PerformedAt = *act.PerformedAt
+	}
+
+	return activity
+}
+
+func (a *Activity) isNil() bool {
+	return a == nil || a.ID == nilActivityID
+}
+
 // getActivities gets all the activities in a given workspace
 func getActivities(service *Service, workspaceID string) ([]Activity, error) {
 	// GetActivities Timeout
@@ -42,7 +89,7 @@ func getActivities(service *Service, workspaceID string) ([]Activity, error) {
 		return nil, err
 	}
 	if code := resp.StatusCode(); code != 200 {
-		return nil, fmt.Errorf(`{"status_code": %d, "status": %q}`, code, resp.Status())
+		return nil, getAPIError("failed to list the workspace activities", resp.Body)
 	}
 	response := resp.JSON200 // WorkspaceActivities
 
@@ -54,32 +101,7 @@ func getActivities(service *Service, workspaceID string) ([]Activity, error) {
 	wID := *response.WorkspaceId
 	activities := []Activity{}
 	for _, act := range *response.Actions {
-		template := apiv1.WorkspaceActivityTemplate{}
-		if act.Templates != nil && len(*act.Templates) > 0 {
-			template = (*act.Templates)[0]
-		}
-		activity := Activity{
-			ID:          stringValue(act.ActionId),
-			PerformedBy: stringValue(act.PerformedBy),
-			Message:     stringValue(template.Message),
-			WorkspaceID: wID,
-		}
-		if act.Name != nil {
-			activity.Name = string(*act.Name)
-		}
-		if act.Status != nil {
-			activity.Status = string(*act.Status)
-		}
-		if template.StartTime != nil {
-			activity.StartTime = *template.StartTime
-		}
-		if template.EndTime != nil {
-			activity.EndTime = *template.EndTime
-		}
-		if act.PerformedAt != nil {
-			activity.PerformedAt = *act.PerformedAt
-		}
-
+		activity := NewActivity(wID, &act)
 		activities = append(activities, activity)
 	}
 
@@ -93,6 +115,11 @@ func (a *Activity) WriteLog(w io.Writer) *Activity {
 
 // Wait ...
 func (a *Activity) Wait() error {
+	if a.isNil() {
+		return nil
+	}
+
+	// TODO: Wait for the activity to finish
 	return nil
 }
 
