@@ -3,6 +3,7 @@ package schematics
 import (
 	"context"
 	"fmt"
+	"io"
 	"time"
 
 	apiv1 "github.com/johandry/gics/schematics/api/v1"
@@ -60,9 +61,14 @@ type Workspace struct {
 	CreatedBy           string                 `json:"created_by,omitempty" yaml:"created_by,omitempty"`
 	Status              WorkspaceStatus        `json:"status,omitempty" yaml:"status,omitempty"`
 	Output              map[string]interface{} `json:"output,omitempty" yaml:"output,omitempty"`
-	Code                []byte
-	TarCode             []byte
-	service             *Service
+
+	Code    []byte
+	TarCode []byte
+
+	tfCodeFiles map[string]string
+	tfBuf       io.Reader
+	service     *Service
+	logOutput   io.Writer
 
 	// Other possible parameters used by the API:
 	// TemplateData         TemplateData                   `json:"template_data,omitempty" yaml:"template_data,omitempty"`
@@ -156,6 +162,27 @@ func (w *Workspace) AddRepo(url string) {
 	return
 }
 
+// SetOutput sets the output used for the logger. It won't log by default
+func (w *Workspace) SetOutput(out io.Writer) {
+	w.logOutput = out
+}
+
+// LoadCode tar and loads the given code to the workspace
+func (w *Workspace) LoadCode(code string) error {
+	w.tfCodeFiles = map[string]string{
+		"main.tf": code,
+	}
+
+	r, err := w.tarMemFiles()
+	if err != nil {
+		return fmt.Errorf("failed to tar the files in memory. %s", err)
+	}
+
+	w.tfBuf = r
+
+	return nil
+}
+
 // Run is used to create, generate and apply the plan of the Schematics
 // workspace in a synchronous way, blocking the execution of the code until the
 // process is completed or fail
@@ -165,7 +192,13 @@ func (w *Workspace) Run() error {
 	if err != nil {
 		return err
 	}
+	// the activity should be a NilActivity, anyway we wait in case the API change
+	// in the future
 	if err := actCreate.Wait(); err != nil {
+		return err
+	}
+
+	if err := w.UploadTar(w.tfBuf); err != nil {
 		return err
 	}
 

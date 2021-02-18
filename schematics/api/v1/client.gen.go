@@ -2155,6 +2155,7 @@ func (c *Client) GetAllWorkspaceInputs(ctx context.Context, wId string, params *
 
 func (c *Client) UploadTemplateTarWithBody(ctx context.Context, wId string, tId string, params *UploadTemplateTarParams, contentType string, body io.Reader) (*http.Response, error) {
 	req, err := NewUploadTemplateTarRequestWithBody(c.Server, wId, tId, params, contentType, body)
+	fmt.Printf("[DEBUG] request: %+v\n", req)
 	if err != nil {
 		return nil, err
 	}
@@ -6825,7 +6826,9 @@ func ParseGetAllWorkspaceInputsResponse(rsp *http.Response) (*GetAllWorkspaceInp
 
 // ParseUploadTemplateTarResponse parses an HTTP response from a UploadTemplateTarWithResponse call
 func ParseUploadTemplateTarResponse(rsp *http.Response) (*UploadTemplateTarResponse, error) {
+	fmt.Printf("[DEBUG] response: %+v\n", rsp)
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	fmt.Printf("[DEBUG] body: %s\n", bodyBytes)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err

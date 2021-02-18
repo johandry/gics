@@ -17,8 +17,9 @@ const (
 func runSchematicsWorkspaceWithCode() *schematics.Workspace {
 	w := schematics.New("GICS-Demo-with-Code", "", nil)
 
+	w.SetOutput(os.Stderr)
 	w.AddVar("prefix", "gics-demo", "", "", false)
-	w.Code = []byte(`
+	code := `
     variable "prefix" {}
     provider "ibm" {
       generation         = 2
@@ -30,21 +31,22 @@ func runSchematicsWorkspaceWithCode() *schematics.Workspace {
     output "name" {
       value = ibm_resource_group.group.name
     }
-  `)
+	`
+	if err := w.LoadCode(code); err != nil {
+		printError(err)
+	}
 
 	if err := w.Run(); err != nil {
 		printError(err)
 	}
 
 	output := w.GetParam("name")
-	fmt.Printf("Resource Group name: %s", output["name"])
+	fmt.Printf("Resource Group name: %s\n", output["name"])
 
 	return w
 }
 
 func runSchematicsWorkspaceWithRepo() *schematics.Workspace {
-	// '{"name":"workspace","type": ["terraform_v0.13"],"template_repo": {"url": "https://github.com/IBM/cloud-enterprise-examples/tree/master/iac/01-getting-started"},"template_data": [{"folder": ".","type": "terraform_v0.13","variablestore": [{"name": "project_name","value": "gics"},{"name": "environment","value": "testing"},{"name": "public_key","value": "fakepublicsshkey", "secure": true}]}]}'
-
 	pubSSHKey, err := ioutil.ReadFile("~/.ssh/id_rsa.pub")
 	if err != nil {
 		printError(err)
@@ -66,7 +68,7 @@ func runSchematicsWorkspaceWithRepo() *schematics.Workspace {
 }
 
 func printError(err error) {
-	fmt.Printf("[ERROR] %s", err)
+	fmt.Printf("[ERROR] %s\n", err)
 	os.Exit(1)
 }
 
@@ -130,6 +132,10 @@ func printWorkspaceList() {
 		printError(err)
 	}
 	fmt.Println("> Workspaces:")
+	if len(wkspList.Workspaces) == 0 {
+		fmt.Println("NONE")
+		return
+	}
 	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', tabwriter.TabIndent)
 	fmt.Fprintln(tw, "ID\tName\tDescription\tLocation\tOwner\tState\tCreated")
 	for _, w := range wkspList.Workspaces {
@@ -139,16 +145,20 @@ func printWorkspaceList() {
 }
 
 func main() {
-	printVersions()
-	printWorkspaceList()
-
-	w := runSchematicsWorkspaceWithCode()
-	if err := w.Delete(true); err != nil {
-		printError(err)
+	if icAPIKey := os.Getenv("IC_API_KEY"); len(icAPIKey) == 0 {
+		printError(fmt.Errorf("[ERROR] GICS requires the IBM Cloud API Key exported in the 'IC_API_KEY' variable"))
 	}
 
-	w = runSchematicsWorkspaceWithRepo()
-	if err := w.Delete(true); err != nil {
-		printError(err)
-	}
+	// printVersions()
+	// printWorkspaceList()
+
+	runSchematicsWorkspaceWithCode()
+	// if err := w.Delete(true); err != nil {
+	// 	printError(err)
+	// }
+
+	// w = runSchematicsWorkspaceWithRepo()
+	// if err := w.Delete(true); err != nil {
+	// 	printError(err)
+	// }
 }

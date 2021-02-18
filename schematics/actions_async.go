@@ -134,15 +134,11 @@ func (w *Workspace) Create() (*Activity, error) {
 		w.Variables = variables
 	}
 
-	act, err := w.LastActivity(activityNameForCreate)
-	if err != nil {
-		return nil, err
-	}
+	w.Status = WorkspaceStatusInactive
 
-	// TODO: Verify this is the correct status. It may not be.
-	// w.Status = WorkspaceStatus(act.Status)
-
-	return act, err
+	// There isn't an Activity for workspace create, this should return a Nil Activity.
+	// Just keeping it here in case the API change in the future
+	return w.LastActivity(activityNameForCreate)
 }
 
 // Plan executes the planning of the Schematics Workspace
@@ -191,8 +187,9 @@ func (w *Workspace) Destroy() (*Activity, error) {
 func (w *Workspace) LastActivity(name string) (*Activity, error) {
 	// Get all the activities of the workspace
 	activities, err := w.LastActivities()
+	// fmt.Printf("[DEBUG] Activities: %+v\n", activities)
 	if err != nil || activities == nil {
-		return nil, err
+		return &NilActivity, err
 	}
 
 	// Filter the activities by Name and PerformedBy
@@ -225,6 +222,8 @@ func (w *Workspace) LastActivity(name string) (*Activity, error) {
 			activity = act
 		}
 	}
+
+	activity.SetOutput(w.logOutput)
 
 	return &activity, nil
 }
